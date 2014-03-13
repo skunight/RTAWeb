@@ -2,10 +2,12 @@
 /*
  * GET home page.
  */
+
 module.exports = function(app){
     var ProviderCtrl = require('./../control/ProviderCtrl');
     var MemberCtrl = require('./../control/MemberCtrl');
     var ProductCtrl = require('./../control/ProductCtrl');
+    var PriceCtrl = require('./../control/PriceCtrl');
     app.post('/ent/provider/create',function(request,response){
         response.contentType('json');
         ProviderCtrl.create(request.body,function(err,res){
@@ -157,5 +159,61 @@ module.exports = function(app){
         })
     });
 
-    app.post();
+    app.post('/product/:productType/price/create',function(request,response){
+        response.contentType('json');
+        PriceCtrl.create(request.body,function(err,res){
+            if(!err){
+                response.send({'error':0});
+            } else {
+                response.send({'error':1,'errorMsg':err});
+            }
+        });
+    });
+
+    app.post('/product/:productType/price/audit/:id',function(request,response){
+        response.contentType('json');
+        PriceCtrl.audit(request.params.id,request.body.status,function(err,res){
+            if(!err){
+                response.send({'error':0});
+            } else {
+                response.send({'error':1,'errorMsg':err});
+            }
+        });
+    });
+
+    app.post('/product/:productType/price/update/:id',function(request,response){
+        response.contentType('json');
+        PriceCtrl.update(request.params.id,request.body,function(err,res){
+            if(!err){
+                response.send({'error':0});
+            } else {
+                response.send({'error':1,'errorMsg':err});
+            }
+        });
+    });
+
+    app.get('/product/:productType/price/list/:id',function(request,response){
+        var obj = {
+            productID : request.params.id,
+            effiectDate : request.query.effiectDate,
+            expiryDate : request.query.expiryDate
+        }
+        var productID = request.params.id;
+        var effiectDate = request.query.effiectDate;
+        var expiryDate = request.query.expiryDate;
+
+        response.contentType('json');
+        PriceCtrl.update(request.params.productType,obj,function(err,res){
+            if(!err){
+                response.send({'error':0,'data':res});
+            } else {
+                response.send({'error':1,'errorMsg':err});
+            }
+        });
+    });
 };
+
+/*
+ app.get('',function(request,response){});
+ app.post('',function(request,response){});
+ */

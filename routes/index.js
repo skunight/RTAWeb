@@ -8,24 +8,26 @@ module.exports = function(app){
     var MemberCtrl = require('./../control/MemberCtrl');
     var ProductCtrl = require('./../control/ProductCtrl');
     var PriceCtrl = require('./../control/PriceCtrl');
+    var ModuleCtrl = require('./../control/ModuleCtrl');
+
     app.post('/ent/provider/create',function(request,response){
         response.contentType('json');
         ProviderCtrl.create(request.body,function(err,res){
-           if(!err){
-               response.send({'error':0});
-           } else {
-               response.send({'error':1,'errorMsg':err});
-           }
+            if (err) {
+                response.send({'error': 1, 'errorMsg': err});
+            } else {
+                response.send({'error': 0});
+            }
         });
     });
 
     app.post('/ent/provider/update/:id',function(request,response){
         response.contentType('json');
         ProviderCtrl.update(request.params.id,request.body,function(err,res){
-            if(!err){
-                response.send({'error':0});
+            if (err) {
+                response.send({'error': 1, 'errorMsg': err});
             } else {
-                response.send({'error':1,'errorMsg':err});
+                response.send({'error': 0});
             }
         })
     });
@@ -35,11 +37,11 @@ module.exports = function(app){
         var page = request.query.page===undefined?0:request.query.page;
         var pageSize = request.query.pageSize===undefined?25:request.query.pageSize;
         ProviderCtrl.list(page,pageSize,function(err,res){
-            if(!err){
-                console.log(res.length,pageSize);
-                response.send({'error':0,'data':res,'totalPage':parseInt(res.length/pageSize),'totalCount':res.length});
+            if (err) {
+                response.send({'error': 1, 'errorMsg': err});
             } else {
-                response.send({'error':1,'errorMsg':err});
+                console.log(res.length, pageSize);
+                response.send({'error': 0, 'data': res, 'totalPage': parseInt(res.length / pageSize), 'totalCount': res.length});
             }
         });
     });
@@ -47,10 +49,10 @@ module.exports = function(app){
     app.get('/ent/provider/detail/:id',function(request,response){
         response.contentType('json');
         ProviderCtrl.detail(request.params.id,function(err,res){
-            if(!err){
-                response.send({'error':0,'data':res});
+            if (err) {
+                response.send({'error': 1, 'errorMsg': err});
             } else {
-                response.send({'error':1,'errorMsg':err});
+                response.send({'error': 0, 'data': res});
             }
         })
     });
@@ -59,10 +61,10 @@ module.exports = function(app){
     app.post('/ent/provider/member/create',function(request,response){
         response.contentType('json');
         MemberCtrl.create(request.body,function(err,res){
-            if(!err){
-                response.send({'error':0});
+            if (err) {
+                response.send({'error': 1, 'errorMsg': err});
             } else {
-                response.send({'error':1,'errorMsg':err});
+                response.send({'error': 0});
             }
         });
     });
@@ -70,10 +72,10 @@ module.exports = function(app){
     app.post('/ent/provider/member/update/:id',function(request,response){
         response.contentType('json');
         MemberCtrl.update(request.params.id,request.body,function(err,res){
-            if(!err){
-                response.send({'error':0});
+            if (err) {
+                response.send({'error': 1, 'errorMsg': err});
             } else {
-                response.send({'error':1,'errorMsg':err});
+                response.send({'error': 0});
             }
         })
     });
@@ -87,10 +89,10 @@ module.exports = function(app){
         var providerID = request.query.providerID;
         var isEnable = request.query.isEnable;
         MemberCtrl.list(page,pageSize,mobile,name,email,providerID,isEnable,function(err,res){
-            if(!err){
-                response.send({'error':0,'data':res,'totalPage':parseInt(res.length/pageSize),'totalCount':res.length});
+            if (err) {
+                response.send({'error': 1, 'errorMsg': err});
             } else {
-                response.send({'error':1,'errorMsg':err});
+                response.send({'error': 0, 'data': res, 'totalPage': parseInt(res.length / pageSize), 'totalCount': res.length});
             }
         });
     });
@@ -98,10 +100,10 @@ module.exports = function(app){
     app.get('/ent/provider/member/detail/:id',function(request,response){
         response.contentType('json');
         MemberCtrl.detail(request.params.id,function(err,res){
-            if(!err){
-                response.send({'error':0,'data':res});
+            if (err) {
+                response.send({'error': 1, 'errorMsg': err});
             } else {
-                response.send({'error':1,'errorMsg':err});
+                response.send({'error': 0, 'data': res});
             }
         })
     });
@@ -109,10 +111,10 @@ module.exports = function(app){
     app.post('/product/:productType/create',function(request,response){
         response.contentType('json');
         ProductCtrl.create(request.params.productType,request.body,function(err,res){
-            if(!err){
-                response.send({'error':0});
+            if (err) {
+                response.send({'error': 1, 'errorMsg': err});
             } else {
-                response.send({'error':1,'errorMsg':err});
+                response.send({'error': 0});
             }
         });
     });
@@ -128,11 +130,11 @@ module.exports = function(app){
         var isEnable = request.query.isEnable;
 
         ProductCtrl.list(request.params.productType,page,pageSize,name,cityID,effectDate,expiryDate,isEnable,function(err,res){
-            if(!err){
-                console.log(res.length,pageSize);
-                response.send({'error':0,'data':res,'totalPage':parseInt(res.length/pageSize),'totalCount':res.length});
+            if (err) {
+                response.send({'error': 1, 'errorMsg': err});
             } else {
-                response.send({'error':1,'errorMsg':err});
+                console.log(res.length, pageSize);
+                response.send({'error': 0, 'data': res, 'totalPage': parseInt(res.length / pageSize), 'totalCount': res.length});
             }
         });
     });
@@ -140,10 +142,10 @@ module.exports = function(app){
     app.get('/product/:productType/detail/:id',function(request,response){
         response.contentType('json');
         ProductCtrl.detail(request.params.id,function(err,res){
-            if(!err){
-                response.send({'error':0,'data':res});
+            if (err) {
+                response.send({'error': 1, 'errorMsg': err});
             } else {
-                response.send({'error':1,'errorMsg':err});
+                response.send({'error': 0, 'data': res});
             }
         });
     });
@@ -151,10 +153,10 @@ module.exports = function(app){
     app.post('/product/:productType/update/:id',function(request,response){
         response.contentType('json');
         ProductCtrl.update(request.params.id,request.body,function(err,res){
-            if(!err){
-                response.send({'error':0});
+            if (err) {
+                response.send({'error': 1, 'errorMsg': err});
             } else {
-                response.send({'error':1,'errorMsg':err});
+                response.send({'error': 0});
             }
         })
     });
@@ -162,10 +164,10 @@ module.exports = function(app){
     app.post('/product/:productType/price/create',function(request,response){
         response.contentType('json');
         PriceCtrl.create(request.body,function(err,res){
-            if(!err){
-                response.send({'error':0});
+            if (err) {
+                response.send({'error': 1, 'errorMsg': err});
             } else {
-                response.send({'error':1,'errorMsg':err});
+                response.send({'error': 0});
             }
         });
     });
@@ -173,10 +175,10 @@ module.exports = function(app){
     app.post('/product/:productType/price/audit/:id',function(request,response){
         response.contentType('json');
         PriceCtrl.audit(request.params.id,request.body.status,function(err,res){
-            if(!err){
-                response.send({'error':0});
+            if (err) {
+                response.send({'error': 1, 'errorMsg': err});
             } else {
-                response.send({'error':1,'errorMsg':err});
+                response.send({'error': 0});
             }
         });
     });
@@ -184,10 +186,10 @@ module.exports = function(app){
     app.post('/product/:productType/price/update/:id',function(request,response){
         response.contentType('json');
         PriceCtrl.update(request.params.id,request.body,function(err,res){
-            if(!err){
-                response.send({'error':0});
+            if (err) {
+                response.send({'error': 1, 'errorMsg': err});
             } else {
-                response.send({'error':1,'errorMsg':err});
+                response.send({'error': 0});
             }
         });
     });
@@ -204,11 +206,25 @@ module.exports = function(app){
 
         response.contentType('json');
         PriceCtrl.update(request.params.productType,obj,function(err,res){
-            if(!err){
-                response.send({'error':0,'data':res});
+            if (err) {
+                response.send({'error': 1, 'errorMsg': err});
             } else {
-                response.send({'error':1,'errorMsg':err});
+                response.send({'error': 0, 'data': res});
             }
+        });
+
+        app.get('/product/:productType/priceLog/list',function(request,response){
+
+        });
+
+        app.get('/module/shortList',function(request,response){
+            ModuleCtrl.list(function (err,res){
+                if (err) {
+                    response.send({'error': 1, 'errorMsg': err});
+                } else {
+                    response.send({'error': 0, 'data': res});
+                }
+            });
         });
     });
 };

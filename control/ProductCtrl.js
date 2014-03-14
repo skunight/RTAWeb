@@ -62,11 +62,14 @@ ProductCtrl.list = function(type,page,pageSize,name,cityID,effectDate,expiryDate
         query.where({city:cityID});
     }
     if(effectDate){
-        query.where({effectDate:{"$gte":effectDate}});
+        query.or([{'effectDate':{'$gte':effectDate,"$lt":expiryDate}},{'effectDate':{'$lt':effectDate},'expiryDate':{'$gt':effectDate}}]);
     }
-    if(expiryDate){
-        query.where({effectDate:{"$lt":effectDate}});
-    }
+//    if(effectDate){
+//        query.where({effectDate:{"$gte":effectDate}});
+//    }
+//    if(expiryDate){
+//        query.where({expiryDate:{"$lt":expiryDate}});
+//    }
     if(isEnable){
         query.where({isEnable:isEnable});
     }

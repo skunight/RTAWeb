@@ -11,8 +11,13 @@ module.exports = function(app){
     var ModuleCtrl = require('./../control/ModuleCtrl');
     var CityCtrl = require('./../control/CityCtrl');
 
-    app.post('/ent/provider/create',function(request,response){
+    app.all('*',function(request,response,next){
+        response.charset = 'utf-8';
         response.contentType('json');
+        next();
+    });
+
+    app.post('/ent/provider/create',function(request,response){
         ProviderCtrl.create(request.body,function(err,res){
             if (err) {
                 response.send({'error': 1, 'errorMsg': err});
@@ -23,7 +28,6 @@ module.exports = function(app){
     });
 
     app.post('/ent/provider/update/:id',function(request,response){
-        response.contentType('json');
         ProviderCtrl.update(request.params.id,request.body,function(err,res){
             if (err) {
                 response.send({'error': 1, 'errorMsg': err});
@@ -34,7 +38,6 @@ module.exports = function(app){
     });
 
     app.get('/ent/provider/list',function(request,response){
-        response.contentType('json');
         var page = request.query.page===undefined?0:request.query.page;
         var pageSize = request.query.pageSize===undefined?25:request.query.pageSize;
         ProviderCtrl.list(page,pageSize,function(err,res){
@@ -48,7 +51,6 @@ module.exports = function(app){
     });
 
     app.get('/ent/provider/detail/:id',function(request,response){
-        response.contentType('json');
         ProviderCtrl.detail(request.params.id,function(err,res){
             if (err) {
                 response.send({'error': 1, 'errorMsg': err});
@@ -60,7 +62,6 @@ module.exports = function(app){
 
 
     app.post('/ent/provider/member/create',function(request,response){
-        response.contentType('json');
         MemberCtrl.create(request.body,function(err,res){
             if (err) {
                 response.send({'error': 1, 'errorMsg': err});
@@ -71,7 +72,6 @@ module.exports = function(app){
     });
 
     app.post('/ent/provider/member/update/:id',function(request,response){
-        response.contentType('json');
         MemberCtrl.update(request.params.id,request.body,function(err,res){
             if (err) {
                 response.send({'error': 1, 'errorMsg': err});
@@ -99,7 +99,6 @@ module.exports = function(app){
     });
 
     app.get('/ent/provider/member/detail/:id',function(request,response){
-        response.contentType('json');
         MemberCtrl.detail(request.params.id,function(err,res){
             if (err) {
                 response.send({'error': 1, 'errorMsg': err});
@@ -110,7 +109,6 @@ module.exports = function(app){
     });
 
     app.post('/product/:productType/create',function(request,response){
-        response.contentType('json');
         ProductCtrl.create(request.params.productType,request.body,function(err,res){
             if (err) {
                 response.send({'error': 1, 'errorMsg': err});
@@ -121,7 +119,6 @@ module.exports = function(app){
     });
 
     app.get('/product/:productType/list',function(request,response){
-        response.contentType('json');
         var page = request.query.page===undefined?0:request.query.page;
         var pageSize = request.query.pageSize===undefined?25:request.query.pageSize;
         var name = request.query.name;
@@ -141,7 +138,6 @@ module.exports = function(app){
     });
 
     app.get('/product/:productType/detail/:id',function(request,response){
-        response.contentType('json');
         ProductCtrl.detail(request.params.id,function(err,res){
             if (err) {
                 response.send({'error': 1, 'errorMsg': err});
@@ -152,7 +148,6 @@ module.exports = function(app){
     });
 
     app.post('/product/:productType/update/:id',function(request,response){
-        response.contentType('json');
         ProductCtrl.update(request.params.id,request.body,function(err,res){
             if (err) {
                 response.send({'error': 1, 'errorMsg': err});
@@ -163,7 +158,6 @@ module.exports = function(app){
     });
 
     app.post('/product/:productType/price/create',function(request,response){
-        response.contentType('json');
         PriceCtrl.create(request.body,function(err,res){
             if (err) {
                 response.send({'error': 1, 'errorMsg': err});
@@ -174,7 +168,6 @@ module.exports = function(app){
     });
 
     app.post('/product/:productType/price/audit/:id',function(request,response){
-        response.contentType('json');
         PriceCtrl.audit(request.params.id,request.body.status,function(err,res){
             if (err) {
                 response.send({'error': 1, 'errorMsg': err});
@@ -185,7 +178,6 @@ module.exports = function(app){
     });
 
     app.post('/product/:productType/price/update/:id',function(request,response){
-        response.contentType('json');
         PriceCtrl.update(request.params.id,request.body,function(err,res){
             if (err) {
                 response.send({'error': 1, 'errorMsg': err});
@@ -204,8 +196,6 @@ module.exports = function(app){
         var productID = request.params.id;
         var effiectDate = request.query.effiectDate;
         var expiryDate = request.query.expiryDate;
-
-        response.contentType('json');
         PriceCtrl.update(request.params.productType,obj,function(err,res){
             if (err) {
                 response.send({'error': 1, 'errorMsg': err});
@@ -281,7 +271,6 @@ module.exports = function(app){
     });
 
     app.get('/product/:productType/image/detail/:id',function(request,response){
-
     });
 
     app.post('/member/login',function(request,response){
@@ -305,7 +294,6 @@ module.exports = function(app){
     });
 
     app.post('/product/:productType/image/delete/:id',function(request,response){
-
     });
 };
 

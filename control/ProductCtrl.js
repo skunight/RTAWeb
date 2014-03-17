@@ -7,7 +7,8 @@ var ProductType = {
     ticket:1,
     hotel:2,
     voture:3,
-    package:4
+    package:4,
+    ticketPackage:5
 };
 
 ProductCtrl.create = function(type,obj,fn){

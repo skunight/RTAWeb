@@ -30,7 +30,8 @@ var productSchema = new Schema({
     tel: String,
     fax: String,
     type: Number,
-    subType: String,
+    subType: Number,
+    status:{'type':Number,'default':1},
     operator: Schema.Types.ObjectId,
     createTime: {type: Number, default: Date.now},
     updateTime: Number

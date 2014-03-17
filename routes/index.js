@@ -212,19 +212,50 @@ module.exports = function(app){
                 response.send({'error': 0, 'data': res});
             }
         });
-
-        app.get('/product/:productType/priceLog/list',function(request,response){
-
+    });
+    app.get('/product/:productType/priceLog/list',function(request,response){
+        var productID = request.query.productID;
+        var startDate = request.query.startDate;
+        var endDate = request.query.endDate;
+        var operatorID = request.query.operatorID;
+        var providerID = request.query.providerID;
+        var status = request.query.status;
+        PriceCtrl.update(request.params.productType,obj,function(err,res){
+            if (err) {
+                response.send({'error': 1, 'errorMsg': err});
+            } else {
+                response.send({'error': 0, 'data': res});
+            }
         });
+    });
 
-        app.get('/module/shortList',function(request,response){
-            ModuleCtrl.list(function (err,res){
-                if (err) {
-                    response.send({'error': 1, 'errorMsg': err});
-                } else {
-                    response.send({'error': 0, 'data': res});
-                }
-            });
+    app.get('/module/shortList',function(request,response){
+        ModuleCtrl.list(function (err,res){
+            if (err) {
+                response.send({'error': 1, 'errorMsg': err});
+            } else {
+                response.send({'error': 0, 'data': res});
+            }
+        });
+    });
+
+    app.get('/product/:productType/shortList',function(request,response){
+        ProductCtrl.shortList(request.params.productType,request.query.cityID,request.query.name,function(err,res){
+            if (err) {
+                response.send({'error': 1, 'errorMsg': err});
+            } else {
+                response.send({'error': 0, 'data': res});
+            }
+        });
+    });
+
+    app.get('/product/package/RelatedProduct/:id',function(request,response){
+        ProductCtrl.relatedProduct(request.params.id,function(err,res){
+            if (err) {
+                response.send({'error': 1, 'errorMsg': err});
+            } else {
+                response.send({'error': 0, 'data': res});
+            }
         });
     });
 };

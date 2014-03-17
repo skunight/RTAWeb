@@ -16,13 +16,14 @@ var priceLogSchema = new Schema({
     packagePrice: Number,
     packagePriceWeekend: Number,
     inventory: Number,
+    inventoryWeekend: Number,
     inventoryType: Number,
     weekend: [Number],
     status: String,
     createTime: Number,
-    provider: Schema.Types.ObjectId,
-    operator: Schema.Types.ObjectId,
-    auditor: Schema.Types.ObjectId,
+    provider: {type:Schema.Types.ObjectId,ref:'Ent'},
+    operator: {type:Schema.Types.ObjectId,ref:'Member'},
+    auditor: {type:Schema.Types.ObjectId,ref:'Member'},
     auditorTime:Number
 });
 

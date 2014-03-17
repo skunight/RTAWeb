@@ -9,7 +9,8 @@ var moduleSchema = new Schema({
     isEnable: Boolean,
     createTime: {type: Number, default: Date.now},
     updateTime: Number,
-    operator: Schema.Types.ObjectId
+    order:Number,
+    operator: {'type':Schema.Types.ObjectId,'ref':'Member'}
 });
 
 var Module = db.mongoose.model("Pro.Module", moduleSchema);

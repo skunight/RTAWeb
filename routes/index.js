@@ -9,6 +9,7 @@ module.exports = function(app){
     var ProductCtrl = require('./../control/ProductCtrl');
     var PriceCtrl = require('./../control/PriceCtrl');
     var ModuleCtrl = require('./../control/ModuleCtrl');
+    var CityCtrl = require('./../control/CityCtrl');
 
     app.post('/ent/provider/create',function(request,response){
         response.contentType('json');
@@ -229,16 +230,6 @@ module.exports = function(app){
         });
     });
 
-    app.get('/module/shortList',function(request,response){
-        ModuleCtrl.list(function (err,res){
-            if (err) {
-                response.send({'error': 1, 'errorMsg': err});
-            } else {
-                response.send({'error': 0, 'data': res});
-            }
-        });
-    });
-
     app.get('/product/:productType/shortList',function(request,response){
         ProductCtrl.shortList(request.params.productType,request.query.cityID,request.query.name,function(err,res){
             if (err) {
@@ -257,6 +248,64 @@ module.exports = function(app){
                 response.send({'error': 0, 'data': res});
             }
         });
+    });
+
+    app.get('/provider/shortList',function(request,response){
+        ProviderCtrl.shortList(function(err,res){
+            if (err) {
+                response.send({'error': 1, 'errorMsg': err});
+            } else {
+                response.send({'error': 0, 'data': res});
+            }
+        });
+    });
+
+    app.get('/module/shortList',function(request,response){
+        ModuleCtrl.list(function (err,res){
+            if (err) {
+                response.send({'error': 1, 'errorMsg': err});
+            } else {
+                response.send({'error': 0, 'data': res});
+            }
+        });
+    });
+
+    app.get('/city/shortList',function(request,response){
+        CityCtrl.shortList(function(err,res){
+            if (err) {
+                response.send({'error': 1, 'errorMsg': err});
+            } else {
+                response.send({'error': 0, 'data': res});
+            }
+        });
+    });
+
+    app.get('/product/:productType/image/detail/:id',function(request,response){
+
+    });
+
+    app.post('/member/login',function(request,response){
+        MemberCtrl.login(request.body.mobile,request.body.passwd,function(err,res){
+            if (err) {
+                response.send({'error': 1, 'errorMsg': err});
+            } else {
+                response.send({'error': 0, 'data': res});
+            }
+        });
+    });
+
+    app.post('/member/password/change',function(request,response){
+        MemberCtrl.changePasswd(request.body.mobile,request.body.passwd,function(err,res){
+            if (err) {
+                response.send({'error': 1, 'errorMsg': err});
+            } else {
+                response.send({'error': 0});
+            }
+        });
+    });
+
+    app.post('/product/:productType/image/delete/:id',function(request,response){
+
     });
 };
 

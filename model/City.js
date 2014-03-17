@@ -16,5 +16,5 @@ var citySchema = new Schema({
 });
 
 var City = db.mongoose.model("City", citySchema);
-HttpClient.js
+
 module.exports = City;

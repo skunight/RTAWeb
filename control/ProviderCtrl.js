@@ -28,6 +28,11 @@ ProviderCtrl.detail = function(id,fn){
     Ent.findById(id);
 };
 
+ProviderCtrl.shortList = function(fn){
+    Ent.find()
+        .select('name')
+        .exec(fn);
+};
 
 
 module.exports = ProviderCtrl;

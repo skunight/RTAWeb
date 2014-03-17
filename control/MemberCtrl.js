@@ -46,4 +46,22 @@ MemberCtrl.detail = function(id,fn){
           .exec(fn);
 };
 
+MemberCtrl.login = function(mobile,passwd,fn){
+    Member.count({'mobile':mobile,'passwd':passwd},function(err,res){
+        if(err){
+            fn(err,null);
+        } else {
+            if(res>0){
+                fn(err,{'loggedIn':true});
+            } else {
+                fn(err,{'loggedIn':false});
+            }
+        }
+    });
+};
+
+MemberCtrl.changePasswd = function(mobile,passwd,fn){
+    Member.findOneAndUpdate({'mobile':mobile},{'$set':{'passwd':passwd}},fn);
+};
+
 module.exports = MemberCtrl;

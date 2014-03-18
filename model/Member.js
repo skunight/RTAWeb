@@ -4,22 +4,23 @@
 var db = require('./../tools/db');
 var Schema = db.mongoose.Schema;//Schema;
 var memberSchema = new Schema({
-    mobile: {type: 'String', unique: true},
-    name: String,
-    passwd: String,
-    email: String,
-    gender: String,
-    birthYear:String,
-    favouriteCity:String,
-    lastDestCity:String,
-    lisencePlate:String,
-    intentCity:String,
-    idCard: String,
-    postAddr: String,
-    signUpDate: { type: Number, default: Date.now },
-    provider: {type:Schema.Types.ObjectId,ref:'Ent'},
-    operator: {type:Schema.Types.ObjectId,ref:'Member'},
-    isEnable: Boolean
+    mobile: {type: 'String', unique: true},                     //会员手机号
+    name: String,                                               //会员姓名
+    passwd: String,                                             //会员登录密码
+    email: String,                                              //会员邮箱
+    tel:String,                                                 //会员电话 仅供应商分销商使用
+    gender: String,                                             //会员性别
+    birthYear:String,                                           //出生年份 仅会员
+    favouriteCity:String,                                       //最近喜爱的目的地 仅会员
+    lastDestCity:String,                                        //最近一次出游的城市 仅会员
+    lisencePlate:String,                                        //车牌号 仅会员
+    intentCity:String,                                          //希望再次出游的城市 仅会员
+    idCard: String,                                             //会员身份证
+    postAddr: String,                                           //会员家庭住址 仅会员
+    signUpDate: { type: Number, default: Date.now },            //会员注册时间
+    provider: {type:Schema.Types.ObjectId,ref:'Ent'},           //供应商ID
+    operator: {type:Schema.Types.ObjectId,ref:'Member'},        //操作员
+    isEnable: Boolean                                           //会员状态
 });
 
 var Member = db.mongoose.model("Member", memberSchema);

@@ -4,9 +4,9 @@
 var db = require('./../tools/db');
 var Schema = db.mongoose.Schema;//Schema;
 var inventorySchema = new Schema({
-    inventory: Number,
-    startDate: Number,
-    endDate: Number
+    inventory: Number,          //库存
+    startDate: Number,          //库存开始时间
+    endDate: Number             //库存结束时间
 });
 
 var Inventory = db.mongoose.model("Inventory", inventorySchema);

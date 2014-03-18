@@ -13,7 +13,7 @@ var priceSchema = new Schema({
     provider: {'type':Schema.Types.ObjectId,'ref':'Ent'},
     operator: Schema.Types.ObjectId,
     inventoryID: {'type':Schema.Types.ObjectId,'ref':'Inventory'},
-    createTime: Number,
+    createTime: { type: Number, default: Date.now },
     updateTime: Number
 });
 

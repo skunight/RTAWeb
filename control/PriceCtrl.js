@@ -11,13 +11,13 @@ var PriceLog = require('./../model/PriceLog');
 var Inventory = require('./../model/Inventory');
 
 
-//TODO Add Type Key
-PriceCtrl.create = function (obj, fn) {
+PriceCtrl.create = function (productType,obj, fn) {
     Price.find({date: {"$gte": obj.startDate, "$lt": obj.endDate}, inventory: {"$gt": 0}}, function (err, res) {
         if (!err) {
             if (res.length > 0) {
                 fn(res, null);
             } else {
+                obj.productType = Product[productType];
                 var priceLog = new PriceLog(obj);
                 priceLog.save(fn);
             }
@@ -28,8 +28,8 @@ PriceCtrl.create = function (obj, fn) {
 };
 
 PriceCtrl.audit = function (id, status, fn) {
+    //TODO 写入审核人
     var async = require('async');
-
     switch (status) {
         case 0:
             PriceLog.findByIdAndUpdate(id, {"$set": {"status": status}}, fn);

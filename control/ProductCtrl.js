@@ -154,14 +154,14 @@ ProductCtrl.relatedProduct = function(id,fn){
                 for(var j=0;i<relatedProductID[i].length;j++){
                     //{productID:"dfdfd",productName:"dfdfdf",dayID:1,quantity:2}
                     result.push({
-                        'productID':relatedProductID[i][j][0],
+                        'product':relatedProductID[i][j][0],
                         'productName':"",
-                        'dayID':i+1,
-                        'quantity':relatedProductID[i][j][1]
+                        'day':i+1,
+                        'qty':relatedProductID[i][j][1]
                     });
                 }
             }
-            fn()
+            fn(null,result);
         }
     });
 };

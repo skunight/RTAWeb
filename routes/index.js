@@ -158,7 +158,7 @@ module.exports = function(app){
     });
 
     app.post('/product/:productType/price/create',function(request,response){
-        PriceCtrl.create(request.body,function(err,res){
+        PriceCtrl.create(request.params.productType,request.body,function(err,res){
             if (err) {
                 response.send({'error': 1, 'errorMsg': err});
             } else {
@@ -221,7 +221,7 @@ module.exports = function(app){
     });
 
     app.get('/product/:productType/shortList',function(request,response){
-        ProductCtrl.shortList(request.params.productType,request.query.cityID,request.query.name,function(err,res){
+        ProductCtrl.shortList(request.params.productType,request.query.city,request.query.name,function(err,res){
             if (err) {
                 response.send({'error': 1, 'errorMsg': err});
             } else {

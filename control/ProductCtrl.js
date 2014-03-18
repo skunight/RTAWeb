@@ -30,7 +30,7 @@ ProductCtrl.create = function(type,obj,fn){
         image: images,
         city: obj.cityID,
         addr: obj.addr,
-        gps: {lat: obj.GPS.split(",")[0], lon: obj.GPS.split(",")[1]},
+        gps: {lat: obj.gps.split(",")[0], lon: obj.gps.split(",")[1]},
         level: obj.level,
         openTime: obj.openTime,
         bookRule: obj.bookRule,
@@ -75,6 +75,7 @@ ProductCtrl.list = function(type,page,pageSize,name,cityID,effectDate,expiryDate
         query.where({isEnable:isEnable});
     }
     query.skip(page*pageSize);
+    query.sort({'city':1});
     query.limit(pageSize);
     query.populate({path:'city',select:'name'});
     query.exec(fn);

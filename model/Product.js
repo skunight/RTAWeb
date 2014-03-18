@@ -4,10 +4,9 @@
 var db = require('./../tools/db');
 var Schema = db.mongoose.Schema;//Schema;
 var productSchema = new Schema({
-    relatedProductID: [],
-    /*"[[[ObjectID('283shs73hs32he2h232323'),2],[ObjectID('283shs73hs32he2h232323'),1]]
-     ,[[ObjectID('283shs73hs32he2h232323'),2],[ObjectID('283shs73hs32he2h232323'),1]]
-     ,[[ObjectID('283shs73hs32he2h232323'),2],[ObjectID('283shs73hs32he2h232323'),1]]]"*/
+    relatedProductID: [
+        {'product': String, 'day': Number, 'qty': Number}
+    ],
     name: String,
     content: String,
     intro: String,
@@ -31,7 +30,7 @@ var productSchema = new Schema({
     fax: String,
     type: Number,
     subType: Number,
-    status:{'type':Number,'default':1},
+    status: {'type': Number, 'default': 1},
     operator: Schema.Types.ObjectId,
     createTime: {type: Number, default: Date.now},
     updateTime: Number

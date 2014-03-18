@@ -36,6 +36,7 @@ MemberCtrl.list = function(page,pageSize,mobile,name,email,providerID,isEnable,f
     query.skip(page*pageSize);
     query.limit(pageSize);
     query.populate({path:'provider',select:'name'});
+    query.sort({'provider':1});
     query.exec(fn);
 };
 

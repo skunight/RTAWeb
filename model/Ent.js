@@ -19,6 +19,11 @@ var entSchema = new Schema({
     operator:{'type':Schema.Types.ObjectId,'ref':'Member'}      //操作员
 });
 
+//entSchema.post('validate',function(data){
+//    data.aaa='bbb';
+//    console.log('pre',data);
+//});
+
 var Ent = db.mongoose.model("Ent", entSchema);
 
 module.exports = Ent;

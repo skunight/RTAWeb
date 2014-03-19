@@ -44,8 +44,7 @@ module.exports = function(app){
             if (err) {
                 response.send({'error': 1, 'errorMsg': err});
             } else {
-                console.log(res.length, pageSize);
-                response.send({'error': 0, 'data': res, 'totalPage': parseInt(res.length / pageSize), 'totalCount': res.length});
+                response.send({'error': 0, 'data': res[0], 'totalPage': Math.ceil(res[1]/pageSize), 'totalCount': res[1]});
             }
         });
     });
@@ -93,7 +92,7 @@ module.exports = function(app){
             if (err) {
                 response.send({'error': 1, 'errorMsg': err});
             } else {
-                response.send({'error': 0, 'data': res, 'totalPage': parseInt(res.length / pageSize), 'totalCount': res.length});
+                response.send({'error': 0, 'data': res[0], 'totalPage': Math.ceil(res[1]/pageSize), 'totalCount': res[1]});
             }
         });
     });
@@ -131,8 +130,7 @@ module.exports = function(app){
             if (err) {
                 response.send({'error': 1, 'errorMsg': err});
             } else {
-                console.log(res.length, pageSize);
-                response.send({'error': 0, 'data': res, 'totalPage': parseInt(res.length / pageSize), 'totalCount': res.length});
+                response.send({'error': 0, 'data': res[0], 'totalPage': Math.ceil(res[1]/pageSize), 'totalCount': res[1]});
             }
         });
     });

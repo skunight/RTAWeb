@@ -53,32 +53,49 @@ ProductCtrl.create = function(type,obj,fn){
 };
 
 ProductCtrl.list = function(type,page,pageSize,name,cityID,effectDate,expiryDate,isEnable,fn){
-    var query = Product.find();
-    query.select('name city level effectDate expiryDate isEnable createTime subType');
-    query.where({type:ProductType[type]});
-    if(name){
-        query.where({mobile:new RegExp(name)});
-    }
-    if(cityID){
-        query.where({city:cityID});
-    }
-    if(effectDate){
-        query.or([{'effectDate':{'$gte':effectDate,"$lt":expiryDate}},{'effectDate':{'$lt':effectDate},'expiryDate':{'$gt':effectDate}}]);
-    }
-//    if(effectDate){
-//        query.where({effectDate:{"$gte":effectDate}});
-//    }
-//    if(expiryDate){
-//        query.where({expiryDate:{"$lt":expiryDate}});
-//    }
-    if(isEnable){
-        query.where({isEnable:isEnable});
-    }
-    query.skip(page*pageSize);
-    query.sort({'city':1});
-    query.limit(pageSize);
-    query.populate({path:'city',select:'name'});
-    query.exec(fn);
+
+    var async = require('async');
+    async.series([
+        function(cb){
+            var query = Product.find();
+            query.select('name city level effectDate expiryDate isEnable createTime subType');
+            query.where({type:ProductType[type]});
+            if(name){
+                query.where({mobile:new RegExp(name)});
+            }
+            if(cityID){
+                query.where({city:cityID});
+            }
+            if(effectDate){
+                query.or([{'effectDate':{'$gte':effectDate,"$lt":expiryDate}},{'effectDate':{'$lt':effectDate},'expiryDate':{'$gt':effectDate}}]);
+            }
+            if(isEnable){
+                query.where({isEnable:isEnable});
+            }
+            query.skip(page*pageSize);
+            query.sort({'city':1});
+            query.limit(pageSize);
+            query.populate({path:'city',select:'name'});
+            query.exec(cb);
+        },function(cb){
+            var query = Product.count();
+            query.where({type:ProductType[type]});
+            if(name){
+                query.where({mobile:new RegExp(name)});
+            }
+            if(cityID){
+                query.where({city:cityID});
+            }
+            if(effectDate){
+                query.or([{'effectDate':{'$gte':effectDate,"$lt":expiryDate}},{'effectDate':{'$lt':effectDate},'expiryDate':{'$gt':effectDate}}]);
+            }
+            if(isEnable){
+                query.where({isEnable:isEnable});
+            }
+            query.exec(cb);
+        }
+    ],fn);
+
 };
 
 ProductCtrl.detail = function(id,fn){

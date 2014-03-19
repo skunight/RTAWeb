@@ -16,12 +16,22 @@ ProviderCtrl.update = function(id,obj,fn){
 };
 
 ProviderCtrl.list = function(page,pageSize,fn){
-    Ent.find()
-       .where({type:2})//1 分销商 2 供应商
-       .select('name contactName contactEmail contactPhone proCode isEnable createTime')
-       .skip(page*pageSize)
-       .limit(pageSize)
-       .exec(fn);
+    var async = require('async');
+    async.series([
+        function(cb){
+            Ent.find()
+                .where({type:2})//1 分销商 2 供应商
+                .select('name contactName contactEmail contactPhone proCode isEnable createTime')
+                .skip(page*pageSize)
+                .limit(pageSize)
+                .exec(cb);
+        },function(cb){
+            Ent.count()
+                .where({type:2})//1 分销商 2 供应商
+                .exec(cb);
+        }
+    ],fn);
+
 };
 
 ProviderCtrl.detail = function(id,fn){

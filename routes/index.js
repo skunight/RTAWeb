@@ -86,9 +86,9 @@ module.exports = function(app){
         var mobile = request.query.mobile;
         var name = request.query.name;
         var email = request.query.email;
-        var providerID = request.query.providerID;
+        var provider = request.query.provider;
         var isEnable = request.query.isEnable;
-        MemberCtrl.list(page,pageSize,mobile,name,email,providerID,isEnable,function(err,res){
+        MemberCtrl.list(page,pageSize,mobile,name,email,provider,isEnable,function(err,res){
             if (err) {
                 response.send({'error': 1, 'errorMsg': err});
             } else {

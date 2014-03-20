@@ -28,7 +28,7 @@ ProductCtrl.create = function(type,obj,fn){
         relatedProductID:obj.relatedProductID,
         intro: obj.intro,
         image: images,
-        city: obj.cityID,
+        city: obj.city,
         addr: obj.addr,
         gps: {lat: obj.gps.split(",")[0], lon: obj.gps.split(",")[1]},
         level: obj.level,

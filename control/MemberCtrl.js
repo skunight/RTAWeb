@@ -15,7 +15,7 @@ MemberCtrl.update = function(id,obj,fn){
     Member.findByIdAndUpdate(id,{$set:obj},fn);
 };
 
-MemberCtrl.list = function(page,pageSize,mobile,name,email,providerID,isEnable,fn){
+MemberCtrl.list = function(page,pageSize,mobile,name,email,provider,isEnable,fn){
     var async = require('async');
     async.series([
         function(cb){
@@ -30,8 +30,8 @@ MemberCtrl.list = function(page,pageSize,mobile,name,email,providerID,isEnable,f
             if(email){
                 query.where({email:new RegExp(email)});
             }
-            if(providerID){
-                query.where({providerID:providerID});
+            if(provider){
+                query.where({provider:provider});
             }
             if(isEnable){
                 query.where({isEnable:isEnable});
@@ -52,8 +52,8 @@ MemberCtrl.list = function(page,pageSize,mobile,name,email,providerID,isEnable,f
             if(email){
                 query.where({email:new RegExp(email)});
             }
-            if(providerID){
-                query.where({providerID:providerID});
+            if(provider){
+                query.where({provider:provider});
             }
             if(isEnable){
                 query.where({isEnable:isEnable});

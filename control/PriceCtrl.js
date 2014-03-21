@@ -142,7 +142,7 @@ PriceCtrl.update = function (id, obj, fn) {
     ], fn);
 };
 
-PriceCtrl.list = function(type,obj){
+PriceCtrl.list = function(type,obj,fn){
     if(type==="package"){
         var async = require('async');
         async.waterfall([

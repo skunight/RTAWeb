@@ -91,4 +91,8 @@ MemberCtrl.changePasswd = function(mobile,passwd,fn){
     Member.findOneAndUpdate({'mobile':mobile},{'$set':{'passwd':passwd}},fn);
 };
 
+MemberCtrl.shortList = function(provider,fn){
+    Member.find({'provider':provider},fn);
+};
+
 module.exports = MemberCtrl;

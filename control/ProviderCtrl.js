@@ -31,7 +31,6 @@ ProviderCtrl.list = function(page,pageSize,fn){
                 .exec(cb);
         }
     ],fn);
-
 };
 
 ProviderCtrl.detail = function(id,fn){

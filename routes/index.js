@@ -199,21 +199,18 @@ module.exports = function (app) {
         });
     });
     app.get('/product/:productType/priceLog/list', function (request, response) {
+        var productID = request.query.product;
+        var startDate = request.query.startDate;
+        var endDate = request.query.endDate;
+        var operatorID = request.query.operator;
+        var providerID = request.query.provider;
+        var status = request.query.status;
 
-        var obj = {
-            productID:request.query.product,
-            startDate : request.query.startDate,
-            endDate :request.query.endDate,
-            operatorID : request.query.operator,
-            providerID : request.query.provider,
-            status : request.query.status
-        }
-        PriceCtrl.list(request.params.productType, obj, function (err, res) {
+        PriceCtrl.priceLogList(productID, startDate, endDate, operatorID, providerID, status, function (err, res) {
             if (err) {
                 response.send({'error': 1, 'errorMsg': err});
             } else {
-                //response.send({'error': 0, 'data': res[0], 'totalPage': Math.ceil(res[1] / pageSize), 'totalCount': res[1]});
-                response.send({'error': 0, 'data': res,'totalPage':1,'totalCount':1});
+                response.send({'error': 0, 'data': res[0], 'totalPage': Math.ceil(res[1] / pageSize), 'totalCount': res[1]});
             }
         });
     });
@@ -294,8 +291,8 @@ module.exports = function (app) {
     app.post('/product/:productType/image/delete/:id', function (request, response) {
     });
 
-    app.get('/ent/provider/member/shortList',function(request,response){
-        MemberCtrl.shortList(request.query.provider,function(err,res){
+    app.get('/ent/provider/member/shortList', function (request, response) {
+        MemberCtrl.shortList(request.query.provider, function (err, res) {
             if (err) {
                 response.send({'error': 1, 'errorMsg': err});
             } else {

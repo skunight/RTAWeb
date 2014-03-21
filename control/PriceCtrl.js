@@ -248,21 +248,46 @@ PriceCtrl.list = function(type,obj,fn){
 
 
 PriceCtrl.priceLogList = function(productID,startDate,endDate,operatorID,providerID,status,fn){
-    var query = PriceLog.find();
-    query.where({'status':status});
-    if(productID){
-        query.where({'product':productID});
-    }
-    if(startDate){
-        query.or([{'startDate':{'$gte':startDate,"$lt":endDate}},{'startDate':{'$lt':startDate},'endDate':{'$gt':startDate}}]);
-    }
-    if(operatorID){
-        query.where({'operator':operatorID})
-    }
-    if(providerID){
-        query.where({'provider':providerID})
-    }
-    query.exec(fn);
+    var async = require('async');
+    async.series([
+        function(cb){
+            var query = PriceLog.find();
+            query.where({'status':status});
+            if(productID){
+                query.where({'product':productID});
+            }
+            if(startDate){
+                query.or([{'startDate':{'$gte':startDate,"$lt":endDate}},{'startDate':{'$lt':startDate},'endDate':{'$gt':startDate}}]);
+            }
+            if(operatorID){
+                query.where({'operator':operatorID})
+            }
+            if(providerID){
+                query.where({'provider':providerID})
+            }
+            query.exec(cb);
+        },function(cb){
+            var query = PriceLog.count();
+            query.where({'status':status});
+            if(productID){
+                query.where({'product':productID});
+            }
+            if(startDate){
+                query.or([{'startDate':{'$gte':startDate,"$lt":endDate}},{'startDate':{'$lt':startDate},'endDate':{'$gt':startDate}}]);
+            }
+            if(operatorID){
+                query.where({'operator':operatorID})
+            }
+            if(providerID){
+                query.where({'provider':providerID})
+            }
+            query.exec(cb);
+        }
+    ],fn);
+
+
+
+
 };
 
 module.exports = PriceCtrl;

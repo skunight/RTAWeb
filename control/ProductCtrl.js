@@ -46,8 +46,7 @@ ProductCtrl.create = function(type,obj,fn){
         type: ProductType[type],
         subType: obj.subType,
         operator: obj.operator
-
-    }
+    };
     var product = new Product(productObj);
     product.save(fn);
 };
@@ -140,7 +139,7 @@ ProductCtrl.update = function(id,obj,fn){
         type: ProductType[type],
         subType: obj.subType,
         operator: obj.operator
-    }
+    };
 
     productObj.updateTime=Date.now();
     Product.findByIdAndUpdate(id,{$set:productObj},fn);

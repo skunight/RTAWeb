@@ -3,7 +3,7 @@
  */
 var ModuleCtrl = function(){};
 var Module = require('./../model/Module');
-ModuleCtrl.list = function(fn){
+ModuleCtrl.shortList = function(fn){
     Module.find()
         .where({'isEnable':true})
         .select('code name cat')

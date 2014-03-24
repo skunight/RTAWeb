@@ -247,7 +247,7 @@ PriceCtrl.list = function(type,obj,fn){
 };
 
 
-PriceCtrl.priceLogList = function(productID,startDate,endDate,operatorID,providerID,status,fn){
+PriceCtrl.priceLogList = function(page,pageSize,productID,startDate,endDate,operatorID,providerID,status,fn){
     var async = require('async');
     async.series([
         function(cb){
@@ -265,6 +265,8 @@ PriceCtrl.priceLogList = function(productID,startDate,endDate,operatorID,provide
             if(providerID){
                 query.where({'provider':providerID})
             }
+            query.skip(page*pageSize);
+            query.limit(pageSize);
             query.exec(cb);
         },function(cb){
             var query = PriceLog.count();
@@ -284,10 +286,6 @@ PriceCtrl.priceLogList = function(productID,startDate,endDate,operatorID,provide
             query.exec(cb);
         }
     ],fn);
-
-
-
-
 };
 
 module.exports = PriceCtrl;

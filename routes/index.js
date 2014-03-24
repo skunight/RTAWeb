@@ -3,12 +3,12 @@
  */
 
 module.exports = function (app) {
-    var ProviderCtrl = require('./../control/ProviderCtrl');
-    var MemberCtrl = require('./../control/MemberCtrl');
-    var ProductCtrl = require('./../control/ProductCtrl');
-    var PriceCtrl = require('./../control/PriceCtrl');
-    var ModuleCtrl = require('./../control/ModuleCtrl');
-    var CityCtrl = require('./../control/CityCtrl');
+    var ProviderAction = require('./../action/ProviderAction');
+    var MemberAction = require('./../action/MemberAction');
+    var ProductAction = require('./../action/ProductAction');
+    var PriceAction = require('./../action/PriceAction');
+    var ModuleAction = require('./../action/ModuleAction');
+    var CityAction = require('./../action/CityAction');
 
     app.all('*', function (request, response, next) {
         response.charset = 'utf-8';
@@ -16,290 +16,40 @@ module.exports = function (app) {
         next();
     });
 
-    app.post('/ent/provider/create', function (request, response) {
-        ProviderCtrl.create(request.body, function (err) {
-            if (err) {
-                response.send({'error': 1, 'errorMsg': err});
-            } else {
-                response.send({'error': 0});
-            }
-        });
-    });
+    app.post('/ent/provider/create',ProviderAction.create);
+    app.post('/ent/provider/update/:id', ProviderAction.update);
+    app.get('/ent/provider/list', ProviderAction.list);
+    app.get('/ent/provider/detail/:id', ProviderAction.detail);
+    app.get('/provider/shortList', ProviderAction.shortList);
 
-    app.post('/ent/provider/update/:id', function (request, response) {
-        ProviderCtrl.update(request.params.id, request.body, function (err) {
-            if (err) {
-                response.send({'error': 1, 'errorMsg': err});
-            } else {
-                response.send({'error': 0});
-            }
-        })
-    });
+    app.post('/ent/provider/member/create', MemberAction.create);
+    app.post('/ent/provider/member/update/:id', MemberAction.update);
+    app.get('/ent/provider/member/list', MemberAction.list);
+    app.get('/ent/provider/member/detail/:id', MemberAction.detail);
+    app.get('/ent/provider/member/shortList', MemberAction.shortList);
 
-    app.get('/ent/provider/list', function (request, response) {
-        var page = request.query.page === undefined ? 0 : request.query.page;
-        var pageSize = request.query.pageSize === undefined ? 25 : request.query.pageSize;
-        ProviderCtrl.list(page, pageSize, function (err, res) {
-            if (err) {
-                response.send({'error': 1, 'errorMsg': err});
-            } else {
-                response.send({'error': 0, 'data': res[0], 'totalPage': Math.ceil(res[1] / pageSize), 'totalCount': res[1]});
-            }
-        });
-    });
-
-    app.get('/ent/provider/detail/:id', function (request, response) {
-        ProviderCtrl.detail(request.params.id, function (err, res) {
-            if (err) {
-                response.send({'error': 1, 'errorMsg': err});
-            } else {
-                response.send({'error': 0, 'data': res});
-            }
-        })
-    });
-
-
-    app.post('/ent/provider/member/create', function (request, response) {
-        MemberCtrl.create(request.body, function (err) {
-            if (err) {
-                response.send({'error': 1, 'errorMsg': err});
-            } else {
-                response.send({'error': 0});
-            }
-        });
-    });
-
-    app.post('/ent/provider/member/update/:id', function (request, response) {
-        MemberCtrl.update(request.params.id, request.body, function (err) {
-            if (err) {
-                response.send({'error': 1, 'errorMsg': err});
-            } else {
-                response.send({'error': 0});
-            }
-        })
-    });
-
-    app.get('/ent/provider/member/list', function (request, response) {
-        var page = request.query.page === undefined ? 0 : request.query.page;
-        var pageSize = request.query.pageSize === undefined ? 25 : request.query.pageSize;
-        var mobile = request.query.mobile;
-        var name = request.query.name;
-        var email = request.query.email;
-        var provider = request.query.provider;
-        var isEnable = request.query.isEnable;
-        MemberCtrl.list(page, pageSize, mobile, name, email, provider, isEnable, function (err, res) {
-            if (err) {
-                response.send({'error': 1, 'errorMsg': err});
-            } else {
-                response.send({'error': 0, 'data': res[0], 'totalPage': Math.ceil(res[1] / pageSize), 'totalCount': res[1]});
-            }
-        });
-    });
-
-    app.get('/ent/provider/member/detail/:id', function (request, response) {
-        MemberCtrl.detail(request.params.id, function (err, res) {
-            if (err) {
-                response.send({'error': 1, 'errorMsg': err});
-            } else {
-                response.send({'error': 0, 'data': res});
-            }
-        })
-    });
-
-    app.post('/product/:productType/create', function (request, response) {
-        ProductCtrl.create(request.params.productType, request.body, function (err) {
-            if (err) {
-                response.send({'error': 1, 'errorMsg': err});
-            } else {
-                response.send({'error': 0});
-            }
-        });
-    });
-
-    app.get('/product/:productType/list', function (request, response) {
-        var page = request.query.page === undefined ? 0 : request.query.page;
-        var pageSize = request.query.pageSize === undefined ? 25 : request.query.pageSize;
-        var name = request.query.name;
-        var cityID = request.query.providerID;
-        var effectDate = request.query.effectDate;
-        var expiryDate = request.query.expiryDate;
-        var isEnable = request.query.isEnable;
-
-        ProductCtrl.list(request.params.productType, page, pageSize, name, cityID, effectDate, expiryDate, isEnable, function (err, res) {
-            if (err) {
-                response.send({'error': 1, 'errorMsg': err});
-            } else {
-                response.send({'error': 0, 'data': res[0], 'totalPage': Math.ceil(res[1] / pageSize), 'totalCount': res[1]});
-            }
-        });
-    });
-
-    app.get('/product/:productType/detail/:id', function (request, response) {
-        ProductCtrl.detail(request.params.id, function (err, res) {
-            if (err) {
-                response.send({'error': 1, 'errorMsg': err});
-            } else {
-                response.send({'error': 0, 'data': res});
-            }
-        });
-    });
-
-    app.post('/product/:productType/update/:id', function (request, response) {
-        ProductCtrl.update(request.params.id, request.body, function (err) {
-            if (err) {
-                response.send({'error': 1, 'errorMsg': err});
-            } else {
-                response.send({'error': 0});
-            }
-        })
-    });
-
-    app.post('/product/:productType/price/create', function (request, response) {
-        PriceCtrl.create(request.params.productType, request.body, function (err) {
-            if (err) {
-                response.send({'error': 1, 'errorMsg': err});
-            } else {
-                response.send({'error': 0});
-            }
-        });
-    });
-
-    app.post('/product/:productType/price/audit/:id', function (request, response) {
-        PriceCtrl.audit(request.params.id, request.body.status, function (err) {
-            if (err) {
-                response.send({'error': 1, 'errorMsg': err});
-            } else {
-                response.send({'error': 0});
-            }
-        });
-    });
-
-    app.post('/product/:productType/price/update/:id', function (request, response) {
-        PriceCtrl.update(request.params.id, request.body, function (err) {
-            if (err) {
-                response.send({'error': 1, 'errorMsg': err});
-            } else {
-                response.send({'error': 0});
-            }
-        });
-    });
-
-    app.get('/product/:productType/price/list/:id', function (request, response) {
-        var obj = {
-            product: request.params.id,
-            effiectDate: request.query.effiectDate,
-            expiryDate: request.query.expiryDate
-        };
-        PriceCtrl.update(request.params.productType, obj, function (err, res) {
-            if (err) {
-                response.send({'error': 1, 'errorMsg': err});
-            } else {
-                response.send({'error': 0, 'data': res});
-            }
-        });
-    });
-    app.get('/product/:productType/priceLog/list', function (request, response) {
-        var productID = request.query.product;
-        var startDate = request.query.startDate;
-        var endDate = request.query.endDate;
-        var operatorID = request.query.operator;
-        var providerID = request.query.provider;
-        var status = request.query.status;
-
-        PriceCtrl.priceLogList(productID, startDate, endDate, operatorID, providerID, status, function (err, res) {
-            if (err) {
-                response.send({'error': 1, 'errorMsg': err});
-            } else {
-                response.send({'error': 0, 'data': res[0], 'totalPage': Math.ceil(res[1] / pageSize), 'totalCount': res[1]});
-            }
-        });
-    });
-
-    app.get('/product/:productType/shortList', function (request, response) {
-        ProductCtrl.shortList(request.params.productType, request.query.city, request.query.name, function (err, res) {
-            if (err) {
-                response.send({'error': 1, 'errorMsg': err});
-            } else {
-                response.send({'error': 0, 'data': res});
-            }
-        });
-    });
-
-    app.get('/product/package/RelatedProduct/:id', function (request, response) {
-        ProductCtrl.relatedProduct(request.params.id, function (err, res) {
-            if (err) {
-                response.send({'error': 1, 'errorMsg': err});
-            } else {
-                response.send({'error': 0, 'data': res});
-            }
-        });
-    });
-
-    app.get('/provider/shortList', function (request, response) {
-        ProviderCtrl.shortList(function (err, res) {
-            if (err) {
-                response.send({'error': 1, 'errorMsg': err});
-            } else {
-                response.send({'error': 0, 'data': res});
-            }
-        });
-    });
-
-    app.get('/module/shortList', function (request, response) {
-        ModuleCtrl.list(function (err, res) {
-            if (err) {
-                response.send({'error': 1, 'errorMsg': err});
-            } else {
-                response.send({'error': 0, 'data': res});
-            }
-        });
-    });
-
-    app.get('/city/shortList', function (request, response) {
-        CityCtrl.shortList(function (err, res) {
-            if (err) {
-                response.send({'error': 1, 'errorMsg': err});
-            } else {
-                response.send({'error': 0, 'data': res});
-            }
-        });
-    });
-
+    app.post('/product/:productType/create', ProductAction.create);
+    app.get('/product/:productType/list', ProductAction.list);
+    app.get('/product/:productType/detail/:id', ProductAction.detail);
+    app.post('/product/:productType/update/:id', ProductAction.update);
+    app.get('/product/:productType/shortList', ProductAction.shortList);
+    app.get('/product/package/RelatedProduct/:id', ProductAction.relatedProduct);
     app.get('/product/:productType/image/detail/:id', function (request, response) {
     });
-
-    app.post('/member/login', function (request, response) {
-        MemberCtrl.login(request.body.mobile, request.body.passwd, function (err, res) {
-            if (err) {
-                response.send({'error': 1, 'errorMsg': err});
-            } else {
-                response.send({'error': 0, 'data': res});
-            }
-        });
-    });
-
-    app.post('/member/password/change', function (request, response) {
-        MemberCtrl.changePasswd(request.body.mobile, request.body.passwd, function (err, res) {
-            if (err) {
-                response.send({'error': 1, 'errorMsg': err});
-            } else {
-                response.send({'error': 0});
-            }
-        });
-    });
-
     app.post('/product/:productType/image/delete/:id', function (request, response) {
     });
 
-    app.get('/ent/provider/member/shortList', function (request, response) {
-        MemberCtrl.shortList(request.query.provider, function (err, res) {
-            if (err) {
-                response.send({'error': 1, 'errorMsg': err});
-            } else {
-                response.send({'error': 0, 'data': res});
-            }
-        });
-    });
+    app.post('/product/:productType/price/create', PriceAction.create);
+    app.post('/product/:productType/price/audit/:id', PriceAction.audit);
+    app.post('/product/:productType/price/update/:id', PriceAction.update);
+    app.get('/product/:productType/price/list/:id', PriceAction.list);
+    app.get('/product/:productType/priceLog/list', PriceAction.priceLogList);
+
+    app.post('/member/login', MemberAction.login);
+    app.post('/member/password/change', MemberAction.changePasswd);
+
+    app.get('/module/shortList', ModuleAction.shortList);
+    app.get('/city/shortList', CityAction.shortList);
 };
 
 /*

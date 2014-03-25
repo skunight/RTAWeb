@@ -13,7 +13,7 @@ exports.create = function(request,response){
 };
 
 exports.update = function(request,response){
-    ProductCtrl.update(request.params.id, request.body, function (err) {
+    ProductCtrl.update(request.params.id, request.params.productType, request.body, function (err) {
         if (err) {
             response.send({'error': 1, 'errorMsg': err});
         } else {

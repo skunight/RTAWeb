@@ -14,7 +14,7 @@ var ProductType = {
 ProductCtrl.create = function(type,obj,fn){
     var images = (function(){
         var image = [];
-        if(imgStrArr!=""){
+        if(obj.image!=''){
             var imgStrArr = obj.image.split(',');
             for(var i=0;i<imgStrArr.length;i++){
                 image.push({
@@ -32,7 +32,7 @@ ProductCtrl.create = function(type,obj,fn){
         image: images,
         city: obj.city,
         addr: obj.addr,
-        gps: {lat: obj.gps.split(",")[0], lon: obj.gps.split(",")[1]},
+        gps: obj.gps==''?null:{lat: obj.gps.split(",")[0], lon: obj.gps.split(",")[1]},
         level: obj.level,
         openTime: obj.openTime,
         bookRule: obj.bookRule,
@@ -106,7 +106,7 @@ ProductCtrl.detail = function(id,fn){
         .exec(fn);
 };
 
-ProductCtrl.update = function(id,obj,fn){
+ProductCtrl.update = function(id,type,obj,fn){
     var images = (function(){
         var imgStrArr = obj.image.split(',');
         var image = [];
@@ -221,5 +221,6 @@ ProductCtrl.imageDelete = function(id,position,fn){
             });
         }
     ],fn);
+
 };
 module.exports = ProductCtrl;

@@ -69,3 +69,23 @@ exports.relatedProduct = function(request,response){
         }
     });
 };
+
+exports.imageDetail = function(request,response){
+    ProductCtrl.imageDetail(request.params.id,function(err,res){
+        if (err) {
+            response.send({'error': 1, 'errorMsg': err});
+        } else {
+            response.send({'error': 0, 'data': res});
+        }
+    });
+};
+
+exports.imageDelete = function(request,response){
+    ProductCtrl.imageDelete(request.params.id,response.body.position,function(err,res){
+        if (err) {
+            response.send({'error': 1, 'errorMsg': err});
+        } else {
+            response.send({'error': 0, 'data': res});
+        }
+    });
+};

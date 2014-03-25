@@ -182,4 +182,42 @@ ProductCtrl.relatedProduct = function(id,fn){
     });
 };
 
+ProductCtrl.imageDetail = function(id,fn){
+    Product.findById(id)
+        .select('image')
+        .exec(function(e,r){
+            if(e){
+                fn(e,null);
+            } else {
+                fn(null, r.image);
+            }
+        });
+};
+
+ProductCtrl.imageDelete = function(id,position,fn){
+    var async = require('async');
+    async.waterfall([
+        function(cb){
+            Product.findById(id)
+                .select('image')
+                .exec(function(e,r){
+                    if(e){
+                        cb(e,null);
+                    } else {
+                        cb(null, r.image);
+                    }
+                });
+        },
+        function(image,cb){
+            image = image.splice(position,1);
+            Product.findByIdAndUpdate(id,{'$set':{'image':image}},function(err,res){
+                if(err){
+                    cb(err,null);
+                } else {
+                    cb(null,image);
+                }
+            });
+        }
+    ],fn);
+};
 module.exports = ProductCtrl;

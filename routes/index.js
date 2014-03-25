@@ -34,10 +34,8 @@ module.exports = function (app) {
     app.post('/product/:productType/update/:id', ProductAction.update);
     app.get('/product/:productType/shortList', ProductAction.shortList);
     app.get('/product/package/RelatedProduct/:id', ProductAction.relatedProduct);
-    app.get('/product/:productType/image/detail/:id', function (request, response) {
-    });
-    app.post('/product/:productType/image/delete/:id', function (request, response) {
-    });
+    app.get('/product/:productType/image/detail/:id', ProductAction.imageDetail);
+    app.post('/product/:productType/image/delete/:id', ProductAction.imageDelete);
 
     app.post('/product/:productType/price/create', PriceAction.create);
     app.post('/product/:productType/price/audit/:id', PriceAction.audit);

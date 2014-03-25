@@ -13,13 +13,15 @@ var ProductType = {
 
 ProductCtrl.create = function(type,obj,fn){
     var images = (function(){
-        var imgStrArr = obj.image.split(',');
         var image = [];
-        for(var i=0;i<imgStrArr.length;i++){
-            image.push({
-                url: imgStrArr[i].split(":")[0],
-                intro: imgStrArr[i].split(":")[1]
-            });
+        if(imgStrArr!=""){
+            var imgStrArr = obj.image.split(',');
+            for(var i=0;i<imgStrArr.length;i++){
+                image.push({
+                    url: imgStrArr[i].split(":")[0],
+                    intro: imgStrArr[i].split(":")[1]
+                });
+            }
         }
         return image;
     })();

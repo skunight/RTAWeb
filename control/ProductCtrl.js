@@ -29,6 +29,7 @@ ProductCtrl.create = function(type,obj,fn){
         name:obj.name,
         relatedProductID:obj.relatedProductID,
         intro: obj.intro,
+        content:obj.content,
         image: images,
         city: obj.city,
         addr: obj.addr,
@@ -108,13 +109,15 @@ ProductCtrl.detail = function(id,fn){
 
 ProductCtrl.update = function(id,type,obj,fn){
     var images = (function(){
-        var imgStrArr = obj.image.split(',');
         var image = [];
-        for(var i=0;i<imgStrArr.length;i++){
-            image.push({
-                url: imgStrArr[i].split(":")[0],
-                intro: imgStrArr[i].split(":")[1]
-            });
+        if(obj.image!=''){
+            var imgStrArr = obj.image.split(',');
+            for(var i=0;i<imgStrArr.length;i++){
+                image.push({
+                    url: imgStrArr[i].split(":")[0],
+                    intro: imgStrArr[i].split(":")[1]
+                });
+            }
         }
         return image;
     })();
@@ -122,10 +125,11 @@ ProductCtrl.update = function(id,type,obj,fn){
         name:obj.name,
         relatedProductID:obj.relatedProductID,
         intro: obj.intro,
+        content:obj.content,
         image: images,
-        city: obj.cityID,
+        city: obj.city,
         addr: obj.addr,
-        gps: {lat: obj.GPS.split(",")[0], lon: obj.GPS.split(",")[1]},
+        gps: obj.gps==''?null:{lat: obj.gps.split(",")[0], lon: obj.gps.split(",")[1]},
         level: obj.level,
         openTime: obj.openTime,
         bookRule: obj.bookRule,
@@ -147,7 +151,7 @@ ProductCtrl.update = function(id,type,obj,fn){
     Product.findByIdAndUpdate(id,{$set:productObj},fn);
 };
 
-ProductCtrl.shortList = function(type,city,name,fn){
+ProductCtrl.shortList = function(type,city,name,limit,fn){
     var query = Product.find();
     query.select('name');
     query.where({'isEnable':true});
@@ -157,6 +161,9 @@ ProductCtrl.shortList = function(type,city,name,fn){
     }
     if(name){
         query.where({'name':new RegExp(name)});
+    }
+    if(limit){
+        query.limit(limit);
     }
     query.exec(fn);
 };

@@ -5,7 +5,7 @@ var ProductCtrl = require('./../control/ProductCtrl');
 exports.create = function(request,response){
     ProductCtrl.create(request.params.productType, request.body, function (err) {
         if (err) {
-            response.send({'error': 1, 'errorMsg': err});
+            response.send({'error': 1, 'errorMsg': err.message});
         } else {
             response.send({'error': 0});
         }
@@ -15,7 +15,7 @@ exports.create = function(request,response){
 exports.update = function(request,response){
     ProductCtrl.update(request.params.id, request.params.productType, request.body, function (err) {
         if (err) {
-            response.send({'error': 1, 'errorMsg': err});
+            response.send({'error': 1, 'errorMsg': err.message});
         } else {
             response.send({'error': 0});
         }
@@ -33,7 +33,7 @@ exports.list = function(request,response){
 
     ProductCtrl.list(request.params.productType, page, pageSize, name, cityID, effectDate, expiryDate, isEnable, function (err, res) {
         if (err) {
-            response.send({'error': 1, 'errorMsg': err});
+            response.send({'error': 1, 'errorMsg': err.message});
         } else {
             response.send({'error': 0, 'data': res[0], 'totalPage': Math.ceil(res[1] / pageSize), 'totalCount': res[1]});
         }
@@ -43,7 +43,7 @@ exports.list = function(request,response){
 exports.detail = function(request,response){
     ProductCtrl.detail(request.params.id, function (err, res) {
         if (err) {
-            response.send({'error': 1, 'errorMsg': err});
+            response.send({'error': 1, 'errorMsg': err.message});
         } else {
             response.send({'error': 0, 'data': res});
         }
@@ -51,9 +51,9 @@ exports.detail = function(request,response){
 };
 
 exports.shortList = function(request,response){
-    ProductCtrl.shortList(request.params.productType, request.query.city, request.query.name, function (err, res) {
+    ProductCtrl.shortList(request.params.productType, request.query.city, request.query.name, request.query.limit,function (err, res) {
         if (err) {
-            response.send({'error': 1, 'errorMsg': err});
+            response.send({'error': 1, 'errorMsg': err.message});
         } else {
             response.send({'error': 0, 'data': res});
         }
@@ -63,7 +63,7 @@ exports.shortList = function(request,response){
 exports.relatedProduct = function(request,response){
     ProductCtrl.relatedProduct(request.params.id, function (err, res) {
         if (err) {
-            response.send({'error': 1, 'errorMsg': err});
+            response.send({'error': 1, 'errorMsg': err.message});
         } else {
             response.send({'error': 0, 'data': res});
         }
@@ -73,7 +73,7 @@ exports.relatedProduct = function(request,response){
 exports.imageDetail = function(request,response){
     ProductCtrl.imageDetail(request.params.id,function(err,res){
         if (err) {
-            response.send({'error': 1, 'errorMsg': err});
+            response.send({'error': 1, 'errorMsg': err.message});
         } else {
             response.send({'error': 0, 'data': res});
         }
@@ -83,7 +83,7 @@ exports.imageDetail = function(request,response){
 exports.imageDelete = function(request,response){
     ProductCtrl.imageDelete(request.params.id,response.body.position,function(err,res){
         if (err) {
-            response.send({'error': 1, 'errorMsg': err});
+            response.send({'error': 1, 'errorMsg': err.message});
         } else {
             response.send({'error': 0, 'data': res});
         }

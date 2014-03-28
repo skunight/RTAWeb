@@ -74,7 +74,9 @@ MemberCtrl.detail = function(id,fn){
 
 
 MemberCtrl.login = function(mobile,passwd,fn){
-    Member.findOne({'mobile':mobile,'passwd':passwd}).select('mobile').exec(fn);
+    Member.findOne({'mobile':mobile,'passwd':passwd})
+//        .select('mobile')
+        .exec(fn);
 //    function(err,res){
 //        if(err){
 //            fn(err,null);

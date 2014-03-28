@@ -3,5 +3,5 @@
  */
 
 var mongoose = require('mongoose');
-mongoose.connect('mongodb://localhost/zjy');
+mongoose.connect('mongodb://172.16.0.15/zjy');
 exports.mongoose = mongoose;

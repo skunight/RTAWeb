@@ -28,7 +28,7 @@ ProductCtrl.create = function (type, obj, fn) {
     })();
     var productObj = {
         name: obj.name,
-        relatedProductID: JSON.parse(obj.relatedProductID),
+        relatedProductID: obj.relatedProductID?JSON.parse(obj.relatedProductID):null,
         intro: obj.intro,
         content: obj.content,
         image: images,

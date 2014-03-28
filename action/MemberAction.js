@@ -78,3 +78,16 @@ exports.shortList = function(request,response){
         }
     });
 };
+
+exports.register = function(request,response){
+    var source = request.params.source;
+    var mobile = request.body.mobile;
+    var passwd = request.body.passwd;
+    MemberCtrl.register(mobile,passwd,source,function(err,res){
+        if (err) {
+            response.send({'error': 1, 'errorMsg': err});
+        } else {
+            response.send({'error': 0, 'data': res});
+        }
+    });
+};

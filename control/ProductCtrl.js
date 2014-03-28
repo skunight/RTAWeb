@@ -1,22 +1,23 @@
 /**
  * Created by zzy on 3/10/14.
  */
-var ProductCtrl = function(){};
+var ProductCtrl = function () {
+};
 var Product = require('./../model/Product');
 var ProductType = {
-    ticket:1,
-    hotel:2,
-    voture:3,
-    package:4,
-    ticketPackage:5
+    ticket: 1,
+    hotel: 2,
+    voture: 3,
+    package: 4,
+    ticketPackage: 5
 };
 
-ProductCtrl.create = function(type,obj,fn){
-    var images = (function(){
+ProductCtrl.create = function (type, obj, fn) {
+    var images = (function () {
         var image = [];
-        if(obj.image!=''){
+        if (obj.image != '') {
             var imgStrArr = obj.image.split(',');
-            for(var i=0;i<imgStrArr.length;i++){
+            for (var i = 0; i < imgStrArr.length; i++) {
                 image.push({
                     url: imgStrArr[i].split(":")[0],
                     intro: imgStrArr[i].split(":")[1]
@@ -26,14 +27,14 @@ ProductCtrl.create = function(type,obj,fn){
         return image;
     })();
     var productObj = {
-        name:obj.name,
-        relatedProductID:obj.relatedProductID,
+        name: obj.name,
+        relatedProductID: JSON.parse(obj.relatedProductID),
         intro: obj.intro,
-        content:obj.content,
+        content: obj.content,
         image: images,
         city: obj.city,
         addr: obj.addr,
-        gps: obj.gps==''?null:{lat: obj.gps.split(",")[0], lon: obj.gps.split(",")[1]},
+        gps: obj.gps == '' ? null : {lat: obj.gps.split(",")[0], lon: obj.gps.split(",")[1]},
         level: obj.level,
         openTime: obj.openTime,
         bookRule: obj.bookRule,
@@ -54,65 +55,71 @@ ProductCtrl.create = function(type,obj,fn){
     product.save(fn);
 };
 
-ProductCtrl.list = function(type,page,pageSize,name,cityID,effectDate,expiryDate,isEnable,fn){
+ProductCtrl.list = function (type, page, pageSize, name, cityID, effectDate, expiryDate, isEnable, fn) {
 
     var async = require('async');
     async.series([
-        function(cb){
+        function (cb) {
             var query = Product.find();
             query.select('name city level effectDate expiryDate isEnable createTime subType');
-            query.where({type:ProductType[type]});
-            if(name){
-                query.where({mobile:new RegExp(name)});
+            query.where({type: ProductType[type]});
+            if (name) {
+                query.where({mobile: new RegExp(name)});
             }
-            if(cityID){
-                query.where({city:cityID});
+            if (cityID) {
+                query.where({city: cityID});
             }
-            if(effectDate){
-                query.or([{'effectDate':{'$gte':effectDate,"$lt":expiryDate}},{'effectDate':{'$lt':effectDate},'expiryDate':{'$gt':effectDate}}]);
+            if (effectDate) {
+                query.or([
+                    {'effectDate': {'$gte': effectDate, "$lt": expiryDate}},
+                    {'effectDate': {'$lt': effectDate}, 'expiryDate': {'$gt': effectDate}}
+                ]);
             }
-            if(isEnable){
-                query.where({isEnable:isEnable});
+            if (isEnable) {
+                query.where({isEnable: isEnable});
             }
-            query.skip(page*pageSize);
-            query.sort({'city':1});
+            query.skip(page * pageSize);
+            query.sort({'city': 1});
             query.limit(pageSize);
-            query.populate({path:'city',select:'name'});
+            query.populate({path: 'city', select: 'name'});
             query.exec(cb);
-        },function(cb){
+        }, function (cb) {
             var query = Product.count();
-            query.where({type:ProductType[type]});
-            if(name){
-                query.where({mobile:new RegExp(name)});
+            query.where({type: ProductType[type]});
+            if (name) {
+                query.where({mobile: new RegExp(name)});
             }
-            if(cityID){
-                query.where({city:cityID});
+            if (cityID) {
+                query.where({city: cityID});
             }
-            if(effectDate){
-                query.or([{'effectDate':{'$gte':effectDate,"$lt":expiryDate}},{'effectDate':{'$lt':effectDate},'expiryDate':{'$gt':effectDate}}]);
+            if (effectDate) {
+                query.or([
+                    {'effectDate': {'$gte': effectDate, "$lt": expiryDate}},
+                    {'effectDate': {'$lt': effectDate}, 'expiryDate': {'$gt': effectDate}}
+                ]);
             }
-            if(isEnable){
-                query.where({isEnable:isEnable});
+            if (isEnable) {
+                query.where({isEnable: isEnable});
             }
             query.exec(cb);
         }
-    ],fn);
+    ], fn);
 
 };
 
-ProductCtrl.detail = function(id,fn){
+ProductCtrl.detail = function (id, fn) {
     Product.findById(id)
-        .populate({path:'city',select:'name'})
-        .populate({path:'operator',select:'name'})
+        .populate({path: 'city', select: 'name'})
+        .populate({path: 'operator', select: 'name'})
         .exec(fn);
 };
 
-ProductCtrl.update = function(id,type,obj,fn){
-    var images = (function(){
+ProductCtrl.update = function (id, type, obj, fn) {
+    var images = (function () {
         var image = [];
-        if(obj.image!=''){
+        if (obj.image != '') {
             var imgStrArr = obj.image.split(',');
-            for(var i=0;i<imgStrArr.length;i++){
+            for (var i = 0; i < imgStrArr.length; i++) {
                 image.push({
                     url: imgStrArr[i].split(":")[0],
                     intro: imgStrArr[i].split(":")[1]
@@ -122,14 +129,14 @@ ProductCtrl.update = function(id,type,obj,fn){
         return image;
     })();
     var productObj = {
-        name:obj.name,
-        relatedProductID:obj.relatedProductID,
+        name: obj.name,
+        relatedProductID: obj.relatedProductID,
         intro: obj.intro,
-        content:obj.content,
+        content: obj.content,
         image: images,
         city: obj.city,
         addr: obj.addr,
-        gps: obj.gps==''?null:{lat: obj.gps.split(",")[0], lon: obj.gps.split(",")[1]},
+        gps: obj.gps == '' ? null : {lat: obj.gps.split(",")[0], lon: obj.gps.split(",")[1]},
         level: obj.level,
         openTime: obj.openTime,
         bookRule: obj.bookRule,
@@ -147,87 +154,98 @@ ProductCtrl.update = function(id,type,obj,fn){
         operator: obj.operator
     };
 
-    productObj.updateTime=Date.now();
-    Product.findByIdAndUpdate(id,{$set:productObj},fn);
+    productObj.updateTime = Date.now();
+    Product.findByIdAndUpdate(id, {$set: productObj}, fn);
 };
 
-ProductCtrl.shortList = function(type,city,name,limit,fn){
+ProductCtrl.shortList = function (type, city, name, limit, fn) {
     var query = Product.find();
     query.select('name');
-    query.where({'isEnable':true});
-    query.where({'type':ProductType[type]});
-    if(city){
-        query.where({'city':city});
+    query.where({'isEnable': true});
+    query.where({'type': ProductType[type]});
+    if (city) {
+        query.where({'city': city});
     }
-    if(name){
-        query.where({'name':new RegExp(name)});
+    if (name) {
+        query.where({'name': new RegExp(name)});
     }
-    if(limit){
+    if (limit) {
         query.limit(limit);
     }
     query.exec(fn);
 };
 
-ProductCtrl.relatedProduct = function(id,fn){
-    Product.findById(id,function(err,res){
-        if(err){
-            fn(err,null);
+ProductCtrl.relatedProduct = function (id, fn) {
+    Product.findById(id, function (err, res) {
+        if (err) {
+            fn(err, null);
         } else {
             var result = [];
             var relatedProductID = res.relatedProductID;
-            for(var i=0;i<relatedProductID.length;i++){
-                for(var j=0;i<relatedProductID[i].length;j++){
+            for (var i = 0; i < relatedProductID.length; i++) {
+                for (var j = 0; i < relatedProductID[i].length; j++) {
                     //{productID:"dfdfd",productName:"dfdfdf",dayID:1,quantity:2}
                     result.push({
-                        'product':relatedProductID[i][j][0],
-                        'productName':"",
-                        'day':i+1,
-                        'qty':relatedProductID[i][j][1]
+                        'product': relatedProductID[i][j][0],
+                        'productName': "",
+                        'day': i + 1,
+                        'qty': relatedProductID[i][j][1]
                     });
                 }
             }
-            fn(null,result);
+            fn(null, result);
         }
     });
 };
 
-ProductCtrl.imageDetail = function(id,fn){
+ProductCtrl.imageDetail = function (id, fn) {
     Product.findById(id)
         .select('image')
-        .exec(function(e,r){
-            if(e){
-                fn(e,null);
+        .exec(function (e, r) {
+            if (e) {
+                fn(e, null);
             } else {
                 fn(null, r.image);
             }
         });
 };
 
-ProductCtrl.imageDelete = function(id,position,fn){
+ProductCtrl.imageDelete = function (id, position, fn) {
     var async = require('async');
     async.waterfall([
-        function(cb){
+        function (cb) {
             Product.findById(id)
                 .select('image')
-                .exec(function(e,r){
-                    if(e){
-                        cb(e,null);
+                .exec(function (e, r) {
+                    if (e) {
+                        cb(e, null);
                     } else {
                         cb(null, r.image);
                     }
                 });
         },
-        function(image,cb){
-            image = image.splice(position,1);
-            Product.findByIdAndUpdate(id,{'$set':{'image':image}},function(err,res){
-                if(err){
-                    cb(err,null);
+        function (image, cb) {
+            image = image.splice(position, 1);
+            Product.findByIdAndUpdate(id, {'$set': {'image': image}}, function (err, res) {
+                if (err) {
+                    cb(err, null);
                 } else {
-                    cb(null,image);
+                    cb(null, image);
                 }
             });
         }
-    ],fn);
+    ], fn);
 
 };
+
+ProductCtrl.webList = function (hot, city, fn) {
+    var query = Product.find();
+    query.where({'city': city});
+    query.select({'name': 1, 'image': 1})
+    if (hot!==undefined) {
+        query.limit(2);
+    }
+    query.exec(fn);
+}
+
 module.exports = ProductCtrl;

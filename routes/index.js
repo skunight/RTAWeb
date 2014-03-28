@@ -16,6 +16,7 @@ module.exports = function (app) {
         next();
     });
 
+    //后端接口
     app.post('/ent/provider/create',ProviderAction.create);
     app.post('/ent/provider/update/:id', ProviderAction.update);
     app.get('/ent/provider/list', ProviderAction.list);
@@ -48,6 +49,13 @@ module.exports = function (app) {
 
     app.get('/module/shortList', ModuleAction.shortList);
     app.get('/city/shortList', CityAction.shortList);
+
+    //WAP接口
+    app.get('/wap/city/list',CityAction.wapCityList);
+    app.get('/wap/city/name/:id',CityAction.wapCityName);
+    app.get('/wap/product/hotList/:city',ProductAction.webList);
+    app.get('/wap/product/webList/:city',ProductAction.webList);
+    app.post('/member/:source/register', MemberAction.register);
 };
 
 /*

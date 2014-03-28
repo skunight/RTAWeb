@@ -89,3 +89,28 @@ exports.imageDelete = function(request,response){
         }
     });
 };
+
+exports.webList = function(request,response){
+    var hot = request.query.hot;
+    var city = request.params.city;
+    ProductCtrl.webList(hot,city,function(err,res){
+        if (err) {
+            response.send({'error': 1, 'errorMsg': err.message});
+        } else {
+            var result = [];
+            for(var i=0;i<res.length;i++){
+                result.push({
+                    '_id':res[i]._id,
+                    'name':res[i].name,
+                    'image':res[i].image,
+                    'price':500
+                });
+
+            }
+            response.send({'error': 0, 'data': result});
+        }
+    });
+};
+
+
+

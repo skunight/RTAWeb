@@ -4,6 +4,7 @@
 var MemberCtrl = function(){};
 var Member = require('./../model/Member');
 var Ent = require('./../model/Ent');
+var async = require('async');
 
 MemberCtrl.create = function(obj,fn){
     var member = new Member(obj);
@@ -93,6 +94,35 @@ MemberCtrl.changePasswd = function(mobile,passwd,fn){
 
 MemberCtrl.shortList = function(provider,fn){
     Member.find({'provider':provider},fn);
+};
+
+MemberCtrl.register = function(mobile,passwd,source,fn){
+    async.waterfall([
+        function(cb){
+            Ent.findOne({'name':source})
+                .select('name')
+                .exec(function(err,res){
+                    if(err){
+                        cb(err,null);
+                    } else {
+                        if(res){
+                            cb(null,res);
+                        } else {
+                            cb(new Error('ent name error'),null);
+                        }
+                    }
+                })
+        },
+        function(ent,cb){
+            var member = new Member({
+                'mobile':mobile,
+                'passwd':passwd,
+                'operator':ent._id,
+                'isEnable':true
+            });
+            member.save(cb);
+        }
+    ],fn);
 };
 
 module.exports = MemberCtrl;

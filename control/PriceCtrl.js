@@ -9,15 +9,23 @@ var Product = require('./../model/Product');
 var Price = require('./../model/Price');
 var PriceLog = require('./../model/PriceLog');
 var Inventory = require('./../model/Inventory');
-
+var ProductType = {
+    ticket: 1,
+    hotel: 2,
+    voture: 3,
+    package: 4,
+    ticketPackage: 5
+};
 
 PriceCtrl.create = function (productType,obj, fn) {
     Price.find({date: {"$gte": obj.startDate, "$lt": obj.endDate}, inventory: {"$gt": 0}}, function (err, res) {
+        console.log(err,res,obj);
         if (!err) {
             if (res.length > 0) {
                 fn(res, null);
             } else {
-                obj.productType = Product[productType];
+                obj.productType = ProductType[productType];
+                console.log(obj);
                 var priceLog = new PriceLog(obj);
                 priceLog.save(fn);
             }
@@ -266,6 +274,9 @@ PriceCtrl.priceLogList = function(page,pageSize,productID,startDate,endDate,oper
                 query.where({'provider':providerID})
             }
             query.skip(page*pageSize);
+            query.populate({path: 'product', select: 'name'});
+            query.populate({path: 'operator', select: 'name'});
+            query.populate({path: 'auditor', select: 'name'});
             query.limit(pageSize);
             query.exec(cb);
         },function(cb){

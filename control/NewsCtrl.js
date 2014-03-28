@@ -9,11 +9,11 @@ NewsCtrl.create = function(obj,fn){
    notice.save(fn);
 };
 
-NewsCtrl.aduit = function(id,status,aduitor,fn){
+NewsCtrl.audit = function(id,status,auditor,fn){
     Notice.findByIdAndUpdate(id,{
         '$set':{
             'status':status,
-            'aduitor':aduitor,
+            'auditor':auditor,
             'auditorTime':Date.now()
         }
     },fn);
@@ -56,6 +56,7 @@ NewsCtrl.list = function(page,pageSize,provider,startDate,endDate,status,fn){
 };
 
 NewsCtrl.detail = function(id,fn){
+    console.log(id);
     Notice.findById(id)
         .populate({path: 'provider', select: 'name'})
         .populate({path: 'operator', select: 'name'})

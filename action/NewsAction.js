@@ -13,8 +13,8 @@ exports.create = function(request,response){
     });
 };
 
-exports.aduit = function(request,response){
-    NewsCtrl.aduit(request.params.id,request.body.status,request.body.auditor,function (err, res) {
+exports.audit = function(request,response){
+    NewsCtrl.audit(request.params.id,request.body.status,request.body.auditor,function (err, res) {
         if (err) {
             response.send({'error': 1, 'errorMsg': err});
         } else {
@@ -40,8 +40,7 @@ exports.list = function(request,response){
 };
 
 exports.detail = function(request,response){
-    var id = request.params.id;
-    NewsCtrl.detail(request.params.id,request.body.status,request.body.auditor,function (err, res) {
+    NewsCtrl.detail(request.params.id,function (err, res) {
         if (err) {
             response.send({'error': 1, 'errorMsg': err});
         } else {
@@ -61,7 +60,7 @@ exports.shortList = function(request,response){
         if (err) {
             response.send({'error': 1, 'errorMsg': err});
         } else {
-            response.send({'error': 0, 'data':res});
+            response.send({'error': 0, 'data': res[0], 'totalPage': Math.ceil(res[1] / pageSize), 'totalCount': res[1]});
         }
     });
 };

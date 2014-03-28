@@ -55,7 +55,7 @@ ProductCtrl.create = function (type, obj, fn) {
     product.save(fn);
 };
 
-ProductCtrl.list = function (type, page, pageSize, name, cityID, effectDate, expiryDate, isEnable, fn) {
+ProductCtrl.list = function (type, page, pageSize, name, city, effectDate, expiryDate, isEnable, fn) {
 
     var async = require('async');
     async.series([
@@ -64,10 +64,10 @@ ProductCtrl.list = function (type, page, pageSize, name, cityID, effectDate, exp
             query.select('name city level effectDate expiryDate isEnable createTime subType');
             query.where({type: ProductType[type]});
             if (name) {
-                query.where({mobile: new RegExp(name)});
+                query.where({name: new RegExp(name)});
             }
-            if (cityID) {
-                query.where({city: cityID});
+            if (city) {
+                query.where({city: city});
             }
             if (effectDate) {
                 query.or([
@@ -87,10 +87,10 @@ ProductCtrl.list = function (type, page, pageSize, name, cityID, effectDate, exp
             var query = Product.count();
             query.where({type: ProductType[type]});
             if (name) {
-                query.where({mobile: new RegExp(name)});
+                query.where({name: new RegExp(name)});
             }
-            if (cityID) {
-                query.where({city: cityID});
+            if (city) {
+                query.where({city: city});
             }
             if (effectDate) {
                 query.or([

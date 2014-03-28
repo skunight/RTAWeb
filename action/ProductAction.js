@@ -26,12 +26,12 @@ exports.list = function(request,response){
     var page = request.query.page === undefined ? 0 : request.query.page;
     var pageSize = request.query.pageSize === undefined ? 25 : request.query.pageSize;
     var name = request.query.name;
-    var cityID = request.query.providerID;
+    var city = request.query.city;
     var effectDate = request.query.effectDate;
     var expiryDate = request.query.expiryDate;
     var isEnable = request.query.isEnable;
 
-    ProductCtrl.list(request.params.productType, page, pageSize, name, cityID, effectDate, expiryDate, isEnable, function (err, res) {
+    ProductCtrl.list(request.params.productType, page, pageSize, name, city, effectDate, expiryDate, isEnable, function (err, res) {
         if (err) {
             response.send({'error': 1, 'errorMsg': err.message});
         } else {

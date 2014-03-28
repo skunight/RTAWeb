@@ -17,7 +17,9 @@ var noticeSchema = new Schema({
     'operator': {type:Schema.Types.ObjectId,ref:'Member'},          //操作员
     'auditor': {type:Schema.Types.ObjectId,ref:'Member'},           //审核员
     'auditorTime':Number,                                           //审核时间
-    'order':Number                                                  //排序
+    'order':{'type':Number,'default':0},                            //排序
+    'status':{'type':Number,'default':1},                           //状态 0:已拒绝,1:已录入,2:已通过
+    'provider':{type:Schema.Types.ObjectId,ref:'Ent'}            //供应商
 
 });
 

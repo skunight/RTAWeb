@@ -9,6 +9,7 @@ module.exports = function (app) {
     var PriceAction = require('./../action/PriceAction');
     var ModuleAction = require('./../action/ModuleAction');
     var CityAction = require('./../action/CityAction');
+    var NewsAction = require('./../action/NewsAction');
 
     app.all('*', function (request, response, next) {
         response.charset = 'utf-8';
@@ -43,6 +44,12 @@ module.exports = function (app) {
     app.post('/product/:productType/price/update/:id', PriceAction.update);
     app.get('/product/:productType/price/list/:id', PriceAction.list);
     app.get('/product/:productType/priceLog/list', PriceAction.priceLogList);
+
+    app.post('/news/create',NewsAction.create);
+    app.post('/news/aduit/:id', NewsAction.aduit);
+    app.get('/news/list', NewsAction.list);
+    app.get('/news/detail/:id', NewsAction.detail);
+    app.get('/news/shortList', NewsAction.shortList);
 
     app.post('/member/login', MemberAction.login);
     app.post('/member/password/change', MemberAction.changePasswd);

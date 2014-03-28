@@ -111,6 +111,7 @@ ProductCtrl.detail = function (id, fn) {
     Product.findById(id)
         .populate({path: 'city', select: 'name'})
         .populate({path: 'operator', select: 'name'})
+        .populate({path: 'relatedProductID.product', select: 'name'})
         .exec(fn);
 };
 

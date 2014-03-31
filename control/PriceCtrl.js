@@ -22,7 +22,7 @@ PriceCtrl.create = function (productType, obj, fn) {
     Price.find({date: {"$gte": obj.startDate, "$lt": obj.endDate}, inventory: {"$gt": 0}}, function (err, res) {
         if (!err) {
             if (res.length > 0) {
-                fn({'code':'104','value':_.min(res, function (price) {return price.date;}).date+'-'+_.max(res, function (price) {return price.date;}).date}, null);
+                fn({'code':104,'value':_.min(res, function (price) {return price.date;}).date+'-'+_.max(res, function (price) {return price.date;}).date}, null);
             } else {
                 obj.productType = ProductType[productType];
                 var priceLog = new PriceLog(obj);

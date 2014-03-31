@@ -6,8 +6,8 @@ var CustomError = require('./../tools/CustomError');
 exports.create = function(request,response){
     PriceCtrl.create(request.params.productType, request.body, function (err) {
         if (err) {
-            if(err.code=='104'){
-                response.send({'error': '104', 'errorMsg': CustomError['104']+' '+err.value});
+            if(err.code===104){
+                response.send({'error': 104, 'errorMsg': CustomError['104']+' '+err.value});
             } else {
                 response.send({'error': 1, 'errorMsg': err});
             }

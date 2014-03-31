@@ -7,7 +7,7 @@ exports.create = function(request,response){
     ProductCtrl.create(request.params.productType, request.body, function (err) {
         if (err) {
             if(err.name=='MongoError'&&err.code==11000){
-                response.send({'error': '103', 'errorMsg': CustomError['103']});
+                response.send({'error': 103, 'errorMsg': CustomError['103']});
             } else {
                 response.send({'error': 1, 'errorMsg': err.message});
             }

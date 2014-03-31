@@ -7,7 +7,7 @@ exports.create = function(request,response){
     MemberCtrl.create(request.body, function (err) {
         if (err) {
             if(err.name=='MongoError'&&err.code==11000){
-                response.send({'error': '102', 'errorMsg': CustomError['102']});
+                response.send({'error': 102, 'errorMsg': CustomError['102']});
             } else {
                 response.send({'error': 1, 'errorMsg': err.message});
             }
@@ -62,7 +62,7 @@ exports.login = function(request,response){
             if(res){
                 response.send({'error': 0, 'data': res});
             } else {
-                response.send({'error': '101', 'errorMsg': CustomError['101']});
+                response.send({'error': 101, 'errorMsg': CustomError['101']});
             }
 
         }

@@ -2,10 +2,15 @@
  * Created by zzy on 3/24/14.
  */
 var MemberCtrl = require('./../control/MemberCtrl');
+var CustomError = require('./../tools/CustomError');
 exports.create = function(request,response){
     MemberCtrl.create(request.body, function (err) {
         if (err) {
-            response.send({'error': 1, 'errorMsg': err});
+            if(err.name=='MongoError'&&err.code==11000){
+                response.send({'error': '102', 'errorMsg': CustomError['102']});
+            } else {
+                response.send({'error': 1, 'errorMsg': err.message});
+            }
         } else {
             response.send({'error': 0});
         }
@@ -54,7 +59,12 @@ exports.login = function(request,response){
         if (err) {
             response.send({'error': 1, 'errorMsg': err});
         } else {
-            response.send({'error': 0, 'data': res});
+            if(res){
+                response.send({'error': 0, 'data': res});
+            } else {
+                response.send({'error': '101', 'errorMsg': CustomError['101']});
+            }
+
         }
     });
 };

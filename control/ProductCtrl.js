@@ -15,7 +15,7 @@ var ProductType = {
 ProductCtrl.create = function (type, obj, fn) {
     var images = (function () {
         var image = [];
-        if (obj.image != '') {
+        if (obj.image !== '' && obj.image!==undefined) {
             var imgStrArr = obj.image.split(',');
             for (var i = 0; i < imgStrArr.length; i++) {
                 image.push({
@@ -34,7 +34,7 @@ ProductCtrl.create = function (type, obj, fn) {
         image: images,
         city: obj.city,
         addr: obj.addr,
-        gps: obj.gps == '' ? null : {lat: obj.gps.split(",")[0], lon: obj.gps.split(",")[1]},
+        gps: obj.gps == ''||obj.gps==undefined ? null : {lat: obj.gps.split(",")[0], lon: obj.gps.split(",")[1]},
         level: obj.level,
         openTime: obj.openTime,
         bookRule: obj.bookRule,

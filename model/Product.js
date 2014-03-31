@@ -11,7 +11,7 @@ var productSchema = new Schema({
             'qty': Number                                               //数量
         }
     ],
-    name: String,                                                       //产品名称
+    name: {type: 'String', unique: true},                               //产品名称
     content: String,                                                    //产品内容
     intro: String,                                                      //产品简介
     image: [                                                            //产品图片

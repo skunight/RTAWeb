@@ -2,10 +2,15 @@
  * Created by zzy on 3/24/14.
  */
 var ProductCtrl = require('./../control/ProductCtrl');
+var CustomError = require('./../tools/CustomError');
 exports.create = function(request,response){
     ProductCtrl.create(request.params.productType, request.body, function (err) {
         if (err) {
-            response.send({'error': 1, 'errorMsg': err.message});
+            if(err.name=='MongoError'&&err.code==11000){
+                response.send({'error': '103', 'errorMsg': CustomError['103']});
+            } else {
+                response.send({'error': 1, 'errorMsg': err.message});
+            }
         } else {
             response.send({'error': 0});
         }

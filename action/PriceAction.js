@@ -2,11 +2,15 @@
  * Created by zzy on 3/24/14.
  */
 var PriceCtrl = require('./../control/PriceCtrl');
-
+var CustomError = require('./../tools/CustomError');
 exports.create = function(request,response){
     PriceCtrl.create(request.params.productType, request.body, function (err) {
         if (err) {
-            response.send({'error': 1, 'errorMsg': err});
+            if(err.code=='104'){
+                response.send({'error': '104', 'errorMsg': CustomError['104']+' '+err.value});
+            } else {
+                response.send({'error': 1, 'errorMsg': err});
+            }
         } else {
             response.send({'error': 0});
         }

@@ -75,19 +75,8 @@ MemberCtrl.detail = function(id,fn){
 
 MemberCtrl.login = function(mobile,passwd,fn){
     Member.findOne({'mobile':mobile,'passwd':passwd})
-//        .select('mobile')
+        .populate({'path':'provider','select':'name'})
         .exec(fn);
-//    function(err,res){
-//        if(err){
-//            fn(err,null);
-//        } else {
-//            if(res>0){
-//                fn(err,{'loggedIn':true});
-//            } else {
-//                fn(err,{'loggedIn':false});
-//            }
-//        }
-//    }
 };
 
 MemberCtrl.changePasswd = function(mobile,passwd,fn){

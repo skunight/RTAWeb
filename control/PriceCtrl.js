@@ -34,18 +34,18 @@ PriceCtrl.create = function (productType, obj, fn) {
     });
 };
 
-PriceCtrl.audit = function (id, status, fn) {
+PriceCtrl.audit = function (id, status,operator, fn) {
     //TODO 写入审核人
     status = parseInt(status);
     var async = require('async');
     switch (status) {
         case 0:
-            PriceLog.findByIdAndUpdate(id, {"$set": {"status": status}}, fn);
+            PriceLog.findByIdAndUpdate(id, {'$set': {'status': status,'auditor':operator,'auditorTime':Date.now()}}, fn);
             break;
         case 2:
             async.waterfall([
                 function (cb) {
-                    PriceLog.findByIdAndUpdate(id, {"$set": {"status": status}}, cb);
+                    PriceLog.findByIdAndUpdate(id, {"$set": {"status": status,'auditor':operator,'auditorTime':Date.now()}}, cb);
                 },
                 function (priceLog, cb) {
                     console.log(priceLog);
@@ -152,9 +152,8 @@ PriceCtrl.update = function (id, obj, fn) {
 };
 
 PriceCtrl.list = function (type, obj, fn) {
-    if (type === "package") {
+    if (type === "package" || type === 'ticketPackage') {
         var async = require('async');
-
         var productids = [];
         var relatedProduct;
         async.waterfall([

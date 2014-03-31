@@ -26,10 +26,10 @@ exports.update = function(request,response){
 exports.list = function(request,response){
     var obj = {
         product: request.params.id,
-        effiectDate: request.query.effiectDate,
+        effectDate: request.query.effectDate,
         expiryDate: request.query.expiryDate
     };
-    PriceCtrl.update(request.params.productType, obj, function (err, res) {
+    PriceCtrl.list(request.params.productType, obj, function (err, res) {
         if (err) {
             response.send({'error': 1, 'errorMsg': err});
         } else {
@@ -51,7 +51,7 @@ exports.audit = function(request,response){
 exports.priceLogList = function(request,response){
     var page = request.query.page === undefined ? 0 : request.query.page;
     var pageSize = request.query.pageSize === undefined ? 25 : request.query.pageSize;
-
+    var productType = request.params.productType;
     var productID = request.query.product;
     var startDate = request.query.startDate;
     var endDate = request.query.endDate;
@@ -59,7 +59,7 @@ exports.priceLogList = function(request,response){
     var providerID = request.query.provider;
     var status = request.query.status;
 
-    PriceCtrl.priceLogList(page,pageSize,productID, startDate, endDate, operatorID, providerID, status, function (err, res) {
+    PriceCtrl.priceLogList(page,pageSize,productID, startDate, endDate, operatorID, providerID, status,productType, function (err, res) {
         if (err) {
             response.send({'error': 1, 'errorMsg': err});
         } else {

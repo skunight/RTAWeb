@@ -1,7 +1,8 @@
 /**
  * Created by zzy on 3/12/14.
  */
-var PriceCtrl = function () {};
+var PriceCtrl = function () {
+};
 
 var _ = require("underscore")._;
 
@@ -17,15 +18,13 @@ var ProductType = {
     ticketPackage: 5
 };
 
-PriceCtrl.create = function (productType,obj, fn) {
+PriceCtrl.create = function (productType, obj, fn) {
     Price.find({date: {"$gte": obj.startDate, "$lt": obj.endDate}, inventory: {"$gt": 0}}, function (err, res) {
-        console.log(err,res,obj);
         if (!err) {
             if (res.length > 0) {
                 fn(res, null);
             } else {
                 obj.productType = ProductType[productType];
-                console.log(obj);
                 var priceLog = new PriceLog(obj);
                 priceLog.save(fn);
             }
@@ -37,6 +36,7 @@ PriceCtrl.create = function (productType,obj, fn) {
 
 PriceCtrl.audit = function (id, status, fn) {
     //TODO 写入审核人
+    status = parseInt(status);
     var async = require('async');
     switch (status) {
         case 0:
@@ -48,53 +48,54 @@ PriceCtrl.audit = function (id, status, fn) {
                     PriceLog.findByIdAndUpdate(id, {"$set": {"status": status}}, cb);
                 },
                 function (priceLog, cb) {
-                    if(priceLog.inventoryType === 1){
+                    console.log(priceLog);
+                    if (priceLog.inventoryType === 1) {
                         var inventory = new Inventory({
-                            'inventory':priceLog.inventory,
-                            'startDate':priceLog.startDate,
-                            'endDate':priceLog.endDate
+                            'inventory': priceLog.inventory,
+                            'startDate': priceLog.startDate,
+                            'endDate': priceLog.endDate
                         });
-                        inventory.save(function(err,res){
-                            if(!err){
-                                cb(null,{'priceLog':priceLog,'inventory':res});
+                        inventory.save(function (err, res) {
+                            if (!err) {
+                                cb(null, {'priceLog': priceLog, 'inventory': res});
                             } else {
-                                cb(err,null);
+                                cb(err, null);
                             }
                         });
                     } else {
-                        cb(null,{'priceLog':priceLog});
+                        cb(null, {'priceLog': priceLog});
                     }
 
-                },function(obj,cb){
-                    var priceArr =[];
+                }, function (obj, cb) {
+                    var priceArr = [];
                     var startDate = obj.priceLog.startDate;
                     var endDate = obj.priceLog.endDate;
-                    var total = (endDate-startDate)/86400000;
+                    var total = (endDate - startDate) / 86400000;
                     var weekend = obj.priceLog.weekend;
-                    for(var i=0;i<total;i++){
-                        var date = startDate+(86400000)*i;
+                    for (var i = 0; i < total; i++) {
+                        var date = startDate + (86400000) * i;
                         var weekend = false;
-                        if(_.contains(weekend, new Date(date).getDay())){
+                        if (_.contains(weekend, new Date(date).getDay())) {
                             weekend = true;
                         }
                         var price = {
-                            'product':obj.priceLog.product,
-                            'date':startDate+(86400000)*i,
-                            'cost':weekend?obj.priceLog.costWeekend:obj.priceLog.cost,
-                            'price':weekend?obj.priceLog.priceWeekend:obj.priceLog.price,
-                            'marketPrice':weekend?obj.priceLog.marketPriceWeekend:obj.priceLog.marketPrice,
-                            'packagePrice':weekend?obj.priceLog.packagePriceWeekend:obj.priceLog.packagePrice,
-                            'inventory':obj.inventory===undefined?weekend?obj.priceLog.inventoryWeekend:obj.priceLog.inventory:1,
-                            'provider':obj.priceLog.provider,
-                            'operator':obj.priceLog.operator
+                            'product': obj.priceLog.product,
+                            'date': startDate + (86400000) * i,
+                            'cost': weekend ? obj.priceLog.costWeekend : obj.priceLog.cost,
+                            'price': weekend ? obj.priceLog.priceWeekend : obj.priceLog.price,
+                            'marketPrice': weekend ? obj.priceLog.marketPriceWeekend : obj.priceLog.marketPrice,
+                            'packagePrice': weekend ? obj.priceLog.packagePriceWeekend : obj.priceLog.packagePrice,
+                            'inventory': obj.inventory === undefined ? weekend ? obj.priceLog.inventoryWeekend : obj.priceLog.inventory : 1,
+                            'provider': obj.priceLog.provider,
+                            'operator': obj.priceLog.operator
                         };
-                        if(obj.inventory!==undefined){
+                        if (obj.inventory !== undefined) {
                             price.inventoryID = obj.inventory._id;
                         }
                         priceArr.push(price);
                     }
 
-                    Price.create(priceArr,cb);
+                    Price.create(priceArr, cb);
                 }
             ], fn);
             break;
@@ -121,7 +122,7 @@ PriceCtrl.audit = function (id, status, fn) {
             ], fn);
             break;
         default:
-            fn(null,null);
+            fn(null, null);
             break;
     }
 };
@@ -133,7 +134,7 @@ PriceCtrl.update = function (id, obj, fn) {
             Price.findById(id, cb);
         },
         function (price, cb) {
-            if (price.inventoryID!==undefined && obj.inventory>1) {
+            if (price.inventoryID !== undefined && obj.inventory > 1) {
                 cb(price, null);
             } else {
                 Price.findByIdAndUpdate(id, {
@@ -150,80 +151,89 @@ PriceCtrl.update = function (id, obj, fn) {
     ], fn);
 };
 
-PriceCtrl.list = function(type,obj,fn){
-    if(type==="package"){
+PriceCtrl.list = function (type, obj, fn) {
+    if (type === "package") {
         var async = require('async');
+
+        var productids = [];
+        var relatedProduct;
         async.waterfall([
-            function(cb){
-                Product.findById(obj.productID,cb);
+            function (cb) {
+                Product.findById(obj.product, cb);
             },
-            function(product,cb){
-                var relatedProduct = product.relatedProductID;
-                var products = [];
-                var productKeys = [];
-                for(var i in relatedProduct){ //get every Day
-                    for(var j in relatedProduct[i]){ //get every product
-                        products.push({
-                            'id':relatedProduct[i][j][0],
-                            'qty':relatedProduct[i][j][1],
-                            'day':i
-                        });
-                        productKeys.push(relatedProduct[i][j][0]);
+            function (product, cb) {
+                relatedProduct = product.relatedProductID;
+
+                var day = 1;
+                for (var i = 0; i < relatedProduct.length; i++) {
+                    if (relatedProduct[i].day > day) {
+                        day = relatedProduct[i];
                     }
+                    productids.push(relatedProduct[i].product);
                 }
-                Price.find({'product':{'$in': _.keys(productKeys)},'date':{'$gte':obj.effiectDate,'$lt':obj.expiryDate}})
+                var expiryDate = obj.expiryDate;
+                if (day > 1) {
+                    expiryDate = expiryDate + (day - 1) * 86400000;
+                }
+                Price.find({'product': {'$in': productids}, 'date': {'$gte': obj.effectDate, '$lte': expiryDate}})
                     .sort('date')
                     .populate('inventoryID')
-                    .exec(function(err,res){
-                        if(!err){
-                            cb(null,{'productKeys':productKeys,'product':products,'price':res});
-                        } else {
+                    .exec(function (err, res) {
+                        if(err){
                             cb(err,null);
+                        } else {
+                            cb(null,res);
                         }
                     });
             },
-            function(o,cb){
+            function(prices,cb){
                 //分割ProductPrice
                 var productPriceArr = [];
-
-                for(var i in o.productKeys){
+//                console.log(prices);
+                console.log();
+                for(var i in productids){
+                    var pid = productids[i];
+                    var arr = _.filter(prices,function(p){
+                        return p.product.toHexString()==pid;
+                    });
                     productPriceArr.push({
-                        'key':o.productKeys[i],
-                        'value':_.where(o.price,{product: o.productKeys[i]})
+                        'key':productids[i],
+                        'value':arr
                     });
                 }
-
                 //找出最小日期
-                var minDate = _.min(o.price, function (price) {
+                var minDate = _.min(prices, function (price) {
                     return price.date;
                 }).date;
 
                 // 拼写价格
                 var result = [];
 
-                var cnt = obj.expiryDate-minDate/86400000;
+                var cnt = (obj.expiryDate-minDate)/86400000;
+
                 for(var i=0;i<cnt;i++){
+                    console.log(cnt);
                     var cost=0,price=0,marketPrice=0,packagePrice=0,inventory=9999999;
                     var save = true;
                     for(var j=0;j< productPriceArr.length;j++){
-                        var productDay = _.find(o.product,function(product){return product.id==productPriceArr[j].key});
-                        var price = _.find(productPriceArr[j].value, function(p){return p.date==minDate+86400000*(i+productDay.day)});
-                        if(!price){
+                        var productDay = _.find(relatedProduct,function(product){return product.product==productPriceArr[j].key});
+                        var priceobj = _.find(productPriceArr[j].value, function(p){return p.date==minDate+86400000*(i+productDay.day)})
+                        if(!priceobj){
                             break;
                             save=false;
                         } else {
-                            cost+=price.cost*productDay.qty;
-                            price+=price.price*productDay.qty;
-                            marketPrice+=marketPrice.price*productDay.qty;
-                            packagePrice+=packagePrice.price*productDay.qty;
-                            if(!price.inventoryID&&price.inventory<inventory){
-                                inventory=price.inventory;
-                            } else if(price.inventoryID.inventory<inventory) {
-                                inventory=price.inventoryID.inventory;
+                            cost+=priceobj.cost*productDay.qty;
+                            price+=priceobj.price*productDay.qty;
+                            marketPrice+=priceobj.marketPrice*productDay.qty;
+                            packagePrice+=priceobj.packagePrice*productDay.qty;
+                            if(!priceobj.inventoryID && priceobj.inventory < inventory){
+                                inventory = priceobj.inventory;
+                            } else if(priceobj.inventoryID.inventory < inventory) {
+                                inventory = priceobj.inventoryID.inventory;
                             }
                         }
+                        console.log(save,cost,price,marketPrice,packagePrice,inventory);
                     }
-
                     if(save){
                         result.push({
                             date:minDate+86400000*i,
@@ -233,21 +243,22 @@ PriceCtrl.list = function(type,obj,fn){
                             packagePrice:packagePrice,
                             inventory:inventory
                         });
+                        console.log(result);
                     }
                 }
                 //返回结果
                 cb(null,result);
             }
-        ],fn);
+        ], fn);
     } else {
         Price.find({
-            'product':obj.productID,
-            'date':{
-                '$gte':obj.effiectDate,
-                '$lt':obj.expiryDate
+            'product': obj.productID,
+            'date': {
+                '$gte': obj.effiectDate,
+                '$lt': obj.expiryDate
             }
         })
-            .populate({path:'inventoryID',select:'startDate endDate'})
+            .populate({path: 'inventoryID', select: 'startDate endDate'})
             .sort('date')
             .select('date cost price marketPrice packagePrice inventory inventoryID')
             .exec(fn);
@@ -255,48 +266,55 @@ PriceCtrl.list = function(type,obj,fn){
 };
 
 
-PriceCtrl.priceLogList = function(page,pageSize,productID,startDate,endDate,operatorID,providerID,status,fn){
+PriceCtrl.priceLogList = function (page, pageSize, productID, startDate, endDate, operatorID, providerID, status, productType, fn) {
     var async = require('async');
     async.series([
-        function(cb){
+        function (cb) {
             var query = PriceLog.find();
-            query.where({'status':status});
-            if(productID){
-                query.where({'product':productID});
+            query.where({'status': status});
+            query.where({'productType': ProductType[productType]});
+            if (productID) {
+                query.where({'product': productID});
             }
-            if(startDate){
-                query.or([{'startDate':{'$gte':startDate,"$lt":endDate}},{'startDate':{'$lt':startDate},'endDate':{'$gt':startDate}}]);
+            if (startDate) {
+                query.or([
+                    {'startDate': {'$gte': startDate, "$lt": endDate}},
+                    {'startDate': {'$lt': startDate}, 'endDate': {'$gt': startDate}}
+                ]);
             }
-            if(operatorID){
-                query.where({'operator':operatorID})
+            if (operatorID) {
+                query.where({'operator': operatorID})
             }
-            if(providerID){
-                query.where({'provider':providerID})
+            if (providerID) {
+                query.where({'provider': providerID})
             }
-            query.skip(page*pageSize);
+            query.skip(page * pageSize);
             query.populate({path: 'product', select: 'name'});
             query.populate({path: 'operator', select: 'name'});
             query.populate({path: 'auditor', select: 'name'});
             query.limit(pageSize);
             query.exec(cb);
-        },function(cb){
+        }, function (cb) {
             var query = PriceLog.count();
-            query.where({'status':status});
-            if(productID){
-                query.where({'product':productID});
+            query.where({'status': status});
+            if (productID) {
+                query.where({'product': productID});
             }
-            if(startDate){
-                query.or([{'startDate':{'$gte':startDate,"$lt":endDate}},{'startDate':{'$lt':startDate},'endDate':{'$gt':startDate}}]);
+            if (startDate) {
+                query.or([
+                    {'startDate': {'$gte': startDate, "$lt": endDate}},
+                    {'startDate': {'$lt': startDate}, 'endDate': {'$gt': startDate}}
+                ]);
             }
-            if(operatorID){
-                query.where({'operator':operatorID})
+            if (operatorID) {
+                query.where({'operator': operatorID})
             }
-            if(providerID){
-                query.where({'provider':providerID})
+            if (providerID) {
+                query.where({'provider': providerID})
             }
             query.exec(cb);
         }
-    ],fn);
+    ], fn);
 };
 
 module.exports = PriceCtrl;

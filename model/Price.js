@@ -5,6 +5,7 @@ var db = require('./../tools/db');
 var Schema = db.mongoose.Schema;//Schema;
 var priceSchema = new Schema({
     product:{'type':Schema.Types.ObjectId,'ref':'Product'},             //产品ID
+    date:Number,
     cost: Number,                                                       //产品底价
     price: Number,                                                      //产品卖价
     marketPrice: Number,                                                //产品市场价

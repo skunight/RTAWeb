@@ -22,7 +22,7 @@ PriceCtrl.create = function (productType, obj, fn) {
     Price.find({date: {"$gte": obj.startDate, "$lt": obj.endDate}, inventory: {"$gt": 0}}, function (err, res) {
         if (!err) {
             if (res.length > 0) {
-                fn({'code':104,'value':_.min(res, function (price) {return price.date;}).date+'-'+_.max(res, function (price) {return price.date;}).date}, null);
+                fn({'code':104,'value':new Date(_.min(res, function (price) {return price.date;}).date).Format('yyyy-MM-dd')+'-'+new Date(_.max(res, function (price) {return price.date;}).date).Format('yyyy-MM-dd')}, null);
             } else {
                 obj.productType = ProductType[productType];
                 var priceLog = new PriceLog(obj);
@@ -35,7 +35,7 @@ PriceCtrl.create = function (productType, obj, fn) {
 };
 
 PriceCtrl.audit = function (id, status,operator, fn) {
-    //TODO 写入审核人
+
     status = parseInt(status);
     var async = require('async');
     switch (status) {
@@ -45,10 +45,11 @@ PriceCtrl.audit = function (id, status,operator, fn) {
         case 2:
             async.waterfall([
                 function (cb) {
-                    PriceLog.findByIdAndUpdate(id, {"$set": {"status": status,'auditor':operator,'auditorTime':Date.now()}}, cb);
+                    PriceLog.findByIdAndUpdate(id, {"$set": {"status": status,'auditor':operator,'auditorTime':Date.now()}}, function(err,res){
+                        cb(err,res);
+                    });
                 },
                 function (priceLog, cb) {
-                    console.log(priceLog);
                     if (priceLog.inventoryType === 1) {
                         var inventory = new Inventory({
                             'inventory': priceLog.inventory,
@@ -70,12 +71,12 @@ PriceCtrl.audit = function (id, status,operator, fn) {
                     var priceArr = [];
                     var startDate = obj.priceLog.startDate;
                     var endDate = obj.priceLog.endDate;
-                    var total = (endDate - startDate) / 86400000;
-                    var weekend = obj.priceLog.weekend;
+                    var total = ((endDate - startDate) / 86400000)+1;
+                    var weekendArr = obj.priceLog.weekend;
                     for (var i = 0; i < total; i++) {
-                        var date = startDate + (86400000) * i;
+                        var date = startDate + 86400000 * i;
                         var weekend = false;
-                        if (_.contains(weekend, new Date(date).getDay())) {
+                        if (_.contains(weekendArr, new Date(date).getDay())) {
                             weekend = true;
                         }
                         var price = {
@@ -122,7 +123,7 @@ PriceCtrl.audit = function (id, status,operator, fn) {
             ], fn);
             break;
         default:
-            fn(null, null);
+            fn(null);
             break;
     }
 };
@@ -162,7 +163,6 @@ PriceCtrl.list = function (type, obj, fn) {
             },
             function (product, cb) {
                 relatedProduct = product.relatedProductID;
-
                 var day = 1;
                 for (var i = 0; i < relatedProduct.length; i++) {
                     if (relatedProduct[i].day > day) {
@@ -188,8 +188,6 @@ PriceCtrl.list = function (type, obj, fn) {
             function(prices,cb){
                 //分割ProductPrice
                 var productPriceArr = [];
-//                console.log(prices);
-                console.log();
                 for(var i in productids){
                     var pid = productids[i];
                     var arr = _.filter(prices,function(p){
@@ -208,10 +206,9 @@ PriceCtrl.list = function (type, obj, fn) {
                 // 拼写价格
                 var result = [];
 
-                var cnt = (obj.expiryDate-minDate)/86400000;
+                var cnt = ((obj.expiryDate-minDate)/86400000)+1;
 
                 for(var i=0;i<cnt;i++){
-                    console.log(cnt);
                     var cost=0,price=0,marketPrice=0,packagePrice=0,inventory=9999999;
                     var save = true;
                     for(var j=0;j< productPriceArr.length;j++){
@@ -231,7 +228,6 @@ PriceCtrl.list = function (type, obj, fn) {
                                 inventory = priceobj.inventoryID.inventory;
                             }
                         }
-                        console.log(save,cost,price,marketPrice,packagePrice,inventory);
                     }
                     if(save){
                         result.push({
@@ -242,7 +238,6 @@ PriceCtrl.list = function (type, obj, fn) {
                             packagePrice:packagePrice,
                             inventory:inventory
                         });
-                        console.log(result);
                     }
                 }
                 //返回结果

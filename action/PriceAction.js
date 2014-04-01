@@ -43,7 +43,8 @@ exports.list = function(request,response){
 };
 
 exports.audit = function(request,response){
-    PriceCtrl.audit(request.params.id, request.body.status, function (err) {
+    PriceCtrl.audit(request.params.id, request.body.status, request.body.operator,
+        function (err) {
         if (err) {
             response.send({'error': 1, 'errorMsg': err});
         } else {

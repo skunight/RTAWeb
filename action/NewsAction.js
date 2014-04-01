@@ -4,7 +4,17 @@
 var NewsCtrl = require('./../control/NewsCtrl');
 
 exports.create = function(request,response){
-    NewsCtrl.create(request.body,function (err, res) {
+    NewsCtrl.create(request.body,function (err) {
+        if (err) {
+            response.send({'error': 1, 'errorMsg': err});
+        } else {
+            response.send({'error': 0});
+        }
+    });
+};
+
+exports.update = function(request,response){
+    NewsCtrl.update(request.params.id,request.body,function (err) {
         if (err) {
             response.send({'error': 1, 'errorMsg': err});
         } else {

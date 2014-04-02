@@ -15,4 +15,3 @@ var privSchema = new Schema({
 var Priv = db.mongoose.model("Pro.Priv", privSchema);
 
 module.exports = Priv;
-Date.now().getTime()

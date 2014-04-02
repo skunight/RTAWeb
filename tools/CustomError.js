@@ -8,6 +8,8 @@ var CustomError = {
     //Product
     '103':'产品名称重复',
     //Price
-    '104':'时间段重复'
+    '104':'时间段重复',
+    //Default
+    '400':'缺少参数'
 }
 module.exports = CustomError;

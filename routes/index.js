@@ -58,6 +58,9 @@ module.exports = function (app) {
     app.get('/module/shortList', ModuleAction.shortList);
     app.get('/city/shortList', CityAction.shortList);
 
+    app.get('/module/priv/list',ModuleAction.privList);
+    app.post('/module/priv/update',ModuleAction.privUpdate);
+
     //WAP接口
     app.get('/wap/city/list',CityAction.wapCityList);
     app.get('/wap/city/name/:id',CityAction.wapCityName);

@@ -19,7 +19,7 @@ var noticeSchema = new Schema({
     'auditorTime':Number,                                           //审核时间
     'order':{'type':Number,'default':0},                            //排序
     'status':{'type':Number,'default':1},                           //状态 0:已拒绝,1:已录入,2:已通过
-    'provider':{type:Schema.Types.ObjectId,ref:'Ent'}            //供应商
+    'provider':{type:Schema.Types.ObjectId,ref:'Ent'}               //供应商
 
 });
 

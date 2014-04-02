@@ -153,7 +153,7 @@ PriceCtrl.update = function (id, obj, fn) {
 };
 
 PriceCtrl.list = function (type, obj, fn) {
-    if (type === "package" || type === 'ticketPackage') {
+    if (type === "package") {
         var async = require('async');
         var productids = [];
         var relatedProduct;
@@ -246,10 +246,10 @@ PriceCtrl.list = function (type, obj, fn) {
         ], fn);
     } else {
         Price.find({
-            'product': obj.productID,
+            'product': obj.product,
             'date': {
-                '$gte': obj.effiectDate,
-                '$lt': obj.expiryDate
+                '$gte': obj.effectDate,
+                '$lte': obj.expiryDate
             }
         })
             .populate({path: 'inventoryID', select: 'startDate endDate'})

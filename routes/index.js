@@ -46,6 +46,7 @@ module.exports = function (app) {
     app.get('/product/:productType/priceLog/list', PriceAction.priceLogList);
 
     app.post('/news/create',NewsAction.create);
+    app.post('/news/update/:id',NewsAction.update);
     app.post('/news/audit/:id', NewsAction.audit);
     app.get('/news/list', NewsAction.list);
     app.get('/news/detail/:id', NewsAction.detail);

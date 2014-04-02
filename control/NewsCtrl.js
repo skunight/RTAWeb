@@ -9,6 +9,12 @@ NewsCtrl.create = function(obj,fn){
    notice.save(fn);
 };
 
+NewsCtrl.update = function(id,obj,fn){
+    Notice.findByIdAndUpdate(id,{'$set':obj},fn);
+};
+
+
+
 NewsCtrl.audit = function(id,status,auditor,fn){
     Notice.findByIdAndUpdate(id,{
         '$set':{

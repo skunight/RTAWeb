@@ -118,7 +118,7 @@ ProductCtrl.detail = function (id, fn) {
 ProductCtrl.update = function (id, type, obj, fn) {
     var images = (function () {
         var image = [];
-        if (obj.image != '') {
+        if (obj.image != '' && obj.image!==undefined) {
             var imgStrArr = obj.image.split(',');
             for (var i = 0; i < imgStrArr.length; i++) {
                 image.push({
@@ -129,34 +129,38 @@ ProductCtrl.update = function (id, type, obj, fn) {
         }
         return image;
     })();
-    var productObj = {
-        name: obj.name,
-        relatedProductID: obj.relatedProductID,
-        intro: obj.intro,
-        content: obj.content,
-        image: images,
-        city: obj.city,
-        addr: obj.addr,
-        gps: obj.gps == '' ? null : {lat: obj.gps.split(",")[0], lon: obj.gps.split(",")[1]},
-        level: obj.level,
-        openTime: obj.openTime,
-        bookRule: obj.bookRule,
-        useRule: obj.useRule,
-        cancelRule: obj.cancelRule,
-        transportation: obj.transportation,
-        effectDate: obj.effectDate,
-        expiryDate: obj.expiryDate,
-        isEnable: obj.isEnable,
-        contactName: obj.contactName,
-        tel: obj.tel,
-        fax: obj.fax,
-        type: ProductType[type],
-        subType: obj.subType,
-        operator: obj.operator
-    };
+    obj.image = images;
+    if(obj.gps!=''&&obj.gps!==undefined){
+        obj.gps = {lat: obj.gps.split(",")[0], lon: obj.gps.split(",")[1]};
+    }
+//    var productObj = {
+//        name: obj.name,
+//        relatedProductID: obj.relatedProductID,
+//        intro: obj.intro,
+//        content: obj.content,
+//        image: images,
+//        city: obj.city,
+//        addr: obj.addr,
+//        gps: obj.gps == '' ? null : {lat: obj.gps.split(",")[0], lon: obj.gps.split(",")[1]},
+//        level: obj.level,
+//        openTime: obj.openTime,
+//        bookRule: obj.bookRule,
+//        useRule: obj.useRule,
+//        cancelRule: obj.cancelRule,
+//        transportation: obj.transportation,
+//        effectDate: obj.effectDate,
+//        expiryDate: obj.expiryDate,
+//        isEnable: obj.isEnable,
+//        contactName: obj.contactName,
+//        tel: obj.tel,
+//        fax: obj.fax,
+//        type: ProductType[type],
+//        subType: obj.subType,
+//        operator: obj.operator
+//    };
 
-    productObj.updateTime = Date.now();
-    Product.findByIdAndUpdate(id, {$set: productObj}, fn);
+    obj.updateTime = Date.now();
+    Product.findByIdAndUpdate(id, {$set: obj}, fn);
 };
 
 ProductCtrl.shortList = function (type, city, name, limit, fn) {
